@@ -155,7 +155,8 @@ const initialFileSystem: Directory = {
         'motd': { type: 'file', content: `I started working in IT nearly two years ago. The plan was to pivot into software development once I had built a strong foundation.
 I\'ve had some exposure to development, including brief work training Azure AI models, but the bulk of my experience has focused on systems administration, automation, and security, learning whatever was required to keep things running.
 At a smaller company, I\'ve had the freedom to take initiative. Frustrated by repetitive tasks, I began building automation for deployments, workstation and server builds, vulnerability scanning, and patching. That turned into a growing interest in DevOps and systems engineering. But I\'m not fixed on one path. I try to stay curious, stay on top of emerging technologies, and build things that solve real problems.
-I can now confidently say I\'ve built that strong foundation, and I\'m now setting out to prove it through certifications and personal projects.`, permissions: '-rw-r--r--', owner: 'root', group: 'root' },
+I\'ve now built that strong foundation, and I\'m now setting out to prove it through certifications and personal projects.
+Try cat README.md`, permissions: '-rw-r--r--', owner: 'root', group: 'root' },
         'hosts': { type: 'file', content: '127.0.0.1\tlocalhost\n127.0.1.1\tportfolio-site\n::1\t\tlocalhost ip6-localhost ip6-loopback', permissions: '-rw-r--r--', owner: 'root', group: 'root' },
         'hostname': { type: 'file', content: 'portfolio-site', permissions: '-rw-r--r--', owner: 'root', group: 'root' },
         'fstab': { type: 'file', content: '# /etc/fstab: static file system information.\nUUID=... / ext4 defaults 0 1', permissions: '-rw-r--r--', owner: 'root', group: 'root' },
@@ -1349,28 +1350,27 @@ const Hero: React.FC = () => {
       case 'help':
         output.push(<TerminalText textType="info" key="help-title">Available commands:</TerminalText>);
         output.push('  help          - Show this help message');
-        output.push('  ls [-alAF]    - List directory contents');
+        output.push('  ls            - List directory contents');
         output.push(<TerminalText textType="dim" key="help-ls-a">                  -a: show all files including . and ..</TerminalText>);
         output.push(<TerminalText textType="dim" key="help-ls-A">                  -A: show hidden files but not . and ..</TerminalText>);
         output.push(<TerminalText textType="dim" key="help-ls-l">                  -l: long format with details</TerminalText>);
         output.push(<TerminalText textType="dim" key="help-ls-F">                  -F: append indicators (/ for directories)</TerminalText>);
         output.push('  cd [dir]      - Change directory (supports absolute and relative paths)');
         output.push('  cat [file]    - Display file content');
-        output.push('  xdg-open [file] - Execute/open file (links, applications)');
-        output.push('  echo ...      - Display a line of text');
+        output.push('  xdg-open      - Execute/open file (links, applications)');
+        output.push('  echo          - Display a line of text');
         output.push('  clear         - Clear the terminal');
         output.push('  whoami        - Display current user');
         output.push('  date          - Display current date and time');
         output.push('  pwd           - Print working directory');
-        output.push('  open [file]   - Open/view file (alias for xdg-open)');
+        output.push('  open          - Open/view file (alias for xdg-open)');
         output.push('');
         output.push(<TerminalText textType="info" key="help-file-ops">File Operations:</TerminalText>);
-        output.push('  touch [file]  - Create empty file');
-        output.push('  mkdir [dir]   - Create directory');
-        output.push('  rm [file]     - Remove file');
-        output.push('  rm -rf [dir]  - Remove directory recursively');
-        output.push('  cp [src] [dst] - Copy file');
-        output.push('  mv [src] [dst] - Move/rename file');
+        output.push('  touch         - Create empty file');
+        output.push('  mkdir         - Create directory');
+        output.push('  rm            - Remove file');
+        output.push('  cp            - Copy file');
+        output.push('  mv            - Move/rename file');
         output.push('');
         output.push(<TerminalText textType="info" key="help-editors">Text Editors:</TerminalText>);
         output.push('  vim [file]    - Vi/Vim editor (authentic Ubuntu vim behavior)');
