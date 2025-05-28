@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal Chess</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #00ff00;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 14px;
+            overflow: hidden;
+        }
+        
+        #terminal {
+            width: 100vw;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            background: #000;
+            position: relative;
+        }
+        
+        #terminal::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 255, 0, 0.03),
+                rgba(0, 255, 0, 0.03) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+        }
+        
+        #header {
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #00ff00;
+        }
+        
+        #game-container {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        
+        #board-section {
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        #coordinates-left {
+            display: flex;
+            flex-direction: column;
+            margin-right: 10px;
+            padding-top: 10px;
+        }
+        
+        .rank-label {
+            height: 40px;
+            width: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00ff00;
+            opacity: 0.7;
+            font-size: 12px;
+        }
+        
+        #board-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        #board {
+            border: 2px solid #00ff00;
+            padding: 10px;
+            background: #000;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+        }
+        
+        #coordinates-bottom {
+            display: flex;
+            padding-left: 10px;
+            margin-top: 5px;
+        }
+        
+        .file-label {
+            width: 40px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00ff00;
+            opacity: 0.7;
+            font-size: 12px;
+        }
+        
+        .board-row {
+            display: flex;
+        }
+        
+        .square {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            position: relative;
+        }
+        
+        .square.light {
+            background: #001100;
+        }
+        
+        .square.dark {
+            background: #003300;
+        }
+        
+        .square.highlight {
+            background: #005500 !important;
+            box-shadow: inset 0 0 10px #00ff00;
+        }
+        
+        #move-history {
+            border: 2px solid #00ff00;
+            padding: 15px;
+            width: 300px;
+            height: 400px;
+            overflow-y: auto;
+            background: #000;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+        }
+        
+        #move-history h3 {
+            margin-top: 0;
+            text-align: center;
+            border-bottom: 1px solid #00ff00;
+            padding-bottom: 10px;
+        }
+        
+        .move-pair {
+            margin: 5px 0;
+        }
+        
+        .move-number {
+            color: #00aa00;
+            margin-right: 10px;
+        }
+        
+        #input-section {
+            margin-top: auto;
+            border-top: 1px solid #00ff00;
+            padding-top: 10px;
+        }
+        
+        #command-line {
+            display: flex;
+            align-items: center;
+        }
+        
+        #prompt {
+            color: #00ff00;
+            margin-right: 10px;
+        }
+        
+        #input {
+            background: transparent;
+            border: none;
+            color: #00ff00;
+            font-family: inherit;
+            font-size: inherit;
+            outline: none;
+            flex: 1;
+            caret-color: #00ff00;
+        }
+        
+        #output {
+            margin-top: 10px;
+            min-height: 40px;
+            color: #00ff00;
+            opacity: 0.8;
+        }
+        
+        .error {
+            color: #ff0000;
+            text-shadow: 0 0 5px #ff0000;
+        }
+        
+        .info {
+            color: #00ffff;
+            text-shadow: 0 0 5px #00ffff;
+        }
+        
+        /* Scrollbar styling */
+        #move-history::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        #move-history::-webkit-scrollbar-track {
+            background: #001100;
+        }
+        
+        #move-history::-webkit-scrollbar-thumb {
+            background: #00ff00;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="terminal">
+        <div id="header">
+            <h1>═══════════════════════════════════════════</h1>
+            <h1>TERMINAL CHESS v1.0 - AI OPPONENT</h1>
+            <h1>═══════════════════════════════════════════</h1>
+        </div>
+        
+        <div id="game-container">
+            <div id="board-section">
+                <div id="coordinates-left"></div>
+                <div id="board-wrapper">
+                    <div id="board"></div>
+                    <div id="coordinates-bottom"></div>
+                </div>
+            </div>
+            
+            <div id="move-history">
+                <h3>MOVE HISTORY</h3>
+                <div id="moves"></div>
+            </div>
+        </div>
+        
+        <div id="input-section">
+            <div id="output"></div>
+            <div id="command-line">
+                <span id="prompt">chess@terminal:~$</span>
+                <input type="text" id="input" autofocus>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chess piece Unicode symbols
+        const pieces = {
+            'K': '♔', 'Q': '♕', 'R': '♖', 'B': '♗', 'N': '♘', 'P': '♙',
+            'k': '♚', 'q': '♛', 'r': '♜', 'b': '♝', 'n': '♞', 'p': '♟'
+        };
+
+        // Initial board state - fixed to match standard chess notation
+        // Rank 0 = 1st rank (white back row)
+        // Rank 7 = 8th rank (black back row)
+        let board = [
+            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'],  // rank 0 = 1st rank (white)
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],  // rank 1 = 2nd rank (white pawns)
+            ['.', '.', '.', '.', '.', '.', '.', '.'],  // rank 2 = 3rd rank
+            ['.', '.', '.', '.', '.', '.', '.', '.'],  // rank 3 = 4th rank
+            ['.', '.', '.', '.', '.', '.', '.', '.'],  // rank 4 = 5th rank
+            ['.', '.', '.', '.', '.', '.', '.', '.'],  // rank 5 = 6th rank
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],  // rank 6 = 7th rank (black pawns)
+            ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r']   // rank 7 = 8th rank (black)
+        ];
+
+        let algebraicMoveHistory = [];
+        let currentTurn = 'white';
+        let lastMove = null;
+        let stockfish = null;
+        let engineReady = false;
+
+        // Initialize simple AI (replaces Stockfish due to CORS issues)
+        function initStockfish() {
+            console.log('Initializing AI engine...');
+            
+            // Simple AI is always ready
+            engineReady = true;
+            document.getElementById('output').innerHTML = '<span class="info">AI engine ready!</span>';
+        }
+
+        function requestStockfishMove() {
+            if (!engineReady) {
+                console.log('AI not ready, using fallback');
+                setTimeout(makeComputerMove, 1000);
+                return;
+            }
+            
+            document.getElementById('output').innerHTML = '<span class="info">AI is thinking...</span>';
+            setTimeout(makeComputerMove, 1000);
+        }
+
+        function generateAlgebraicNotation(piece, from, to, capture) {
+            const pieceType = piece.toUpperCase();
+            const toSquare = String.fromCharCode(97 + to.file) + (to.rank + 1);
+            
+            if (pieceType === 'P') {
+                // Pawn moves
+                if (capture) {
+                    return String.fromCharCode(97 + from.file) + 'x' + toSquare;
+                }
+                return toSquare;
+            } else {
+                // Piece moves
+                let notation = pieceType;
+                
+                // Add disambiguation if needed (simplified)
+                const fromSquare = String.fromCharCode(97 + from.file) + (from.rank + 1);
+                
+                if (capture) {
+                    notation += 'x';
+                }
+                notation += toSquare;
+                
+                return notation;
+            }
+        }
+
+        function renderBoard() {
+            const boardEl = document.getElementById('board');
+            boardEl.innerHTML = '';
+            
+            // Render rank labels
+            const leftCoords = document.getElementById('coordinates-left');
+            leftCoords.innerHTML = '';
+            for (let rank = 7; rank >= 0; rank--) {
+                const label = document.createElement('div');
+                label.className = 'rank-label';
+                label.textContent = rank + 1;
+                leftCoords.appendChild(label);
+            }
+            
+            // Render board squares
+            for (let rank = 7; rank >= 0; rank--) {
+                const rowEl = document.createElement('div');
+                rowEl.className = 'board-row';
+                
+                for (let file = 0; file < 8; file++) {
+                    const squareEl = document.createElement('div');
+                    const isLight = (rank + file) % 2 === 0;
+                    squareEl.className = `square ${isLight ? 'light' : 'dark'}`;
+                    
+                    // Highlight last move
+                    if (lastMove && ((lastMove.from.rank === rank && lastMove.from.file === file) ||
+                        (lastMove.to.rank === rank && lastMove.to.file === file))) {
+                        squareEl.classList.add('highlight');
+                    }
+                    
+                    const piece = board[rank][file];
+                    if (piece !== '.') {
+                        squareEl.textContent = pieces[piece];
+                    }
+                    
+                    rowEl.appendChild(squareEl);
+                }
+                
+                boardEl.appendChild(rowEl);
+            }
+            
+            // Render file labels
+            const bottomCoords = document.getElementById('coordinates-bottom');
+            bottomCoords.innerHTML = '';
+            for (let file = 0; file < 8; file++) {
+                const label = document.createElement('div');
+                label.className = 'file-label';
+                label.textContent = String.fromCharCode(97 + file);
+                bottomCoords.appendChild(label);
+            }
+        }
+
+        function renderMoveHistory() {
+            const movesEl = document.getElementById('moves');
+            movesEl.innerHTML = '';
+            
+            for (let i = 0; i < algebraicMoveHistory.length; i += 2) {
+                const moveNum = Math.floor(i / 2) + 1;
+                const movePair = document.createElement('div');
+                movePair.className = 'move-pair';
+                
+                let text = `<span class="move-number">${moveNum}.</span>`;
+                text += algebraicMoveHistory[i];
+                if (algebraicMoveHistory[i + 1]) {
+                    text += ` ${algebraicMoveHistory[i + 1]}`;
+                }
+                
+                movePair.innerHTML = text;
+                movesEl.appendChild(movePair);
+            }
+            
+            movesEl.scrollTop = movesEl.scrollHeight;
+        }
+
+        function parseMove(input) {
+            input = input.trim().toLowerCase();
+            
+            // Check for castling
+            if (input === 'o-o' || input === '0-0') {
+                return { type: 'castle', side: 'king' };
+            }
+            if (input === 'o-o-o' || input === '0-0-0') {
+                return { type: 'castle', side: 'queen' };
+            }
+            
+            // UCI format (e2e4)
+            if (input.match(/^[a-h][1-8][a-h][1-8]$/)) {
+                return {
+                    type: 'uci',
+                    from: input.substring(0, 2),
+                    to: input.substring(2, 4)
+                };
+            }
+            
+            // Pawn captures like exf3, dxe4
+            if (input.match(/^[a-h]x[a-h][1-8]$/)) {
+                console.log(`Parsed as pawn capture: ${input}`);
+                const result = {
+                    type: 'pawn_capture',
+                    fromFile: input.charCodeAt(0) - 97,
+                    toFile: input.charCodeAt(2) - 97,
+                    toRank: parseInt(input[3]) - 1
+                };
+                console.log(`Pawn capture from file ${result.fromFile} (${input[0]}) to ${result.toFile} (${input[2]}), rank ${result.toRank} (${input[3]})`);
+                return result;
+            }
+            
+            // Standard notation - handle pawn moves like e4, d4
+            if (input.match(/^[a-h][1-8]$/)) {
+                console.log(`Parsed as pawn move: ${input}`);
+                const result = {
+                    type: 'pawn',
+                    toFile: input.charCodeAt(0) - 97,
+                    toRank: parseInt(input[1]) - 1
+                };
+                console.log(`Pawn to file ${result.toFile} (${input[0]}), rank ${result.toRank} (${input[1]})`);
+                return result;
+            }
+            
+            // Standard notation with piece (Nf3, Bxe5, etc)
+            const moveRegex = /^([kqrbn])([a-h])?([1-8])?x?([a-h])([1-8])([+#])?$/i;
+            const match = input.match(moveRegex);
+            
+            if (match) {
+                return {
+                    type: 'piece',
+                    piece: match[1].toUpperCase(),
+                    fromFile: match[2] ? match[2].charCodeAt(0) - 97 : null,
+                    fromRank: match[3] ? parseInt(match[3]) - 1 : null,
+                    toFile: match[4].charCodeAt(0) - 97,
+                    toRank: parseInt(match[5]) - 1
+                };
+            }
+            
+            return null;
+        }
+
+        function findPawnMove(toFile, toRank) {
+            const pawn = currentTurn === 'white' ? 'P' : 'p';
+            // White pawns are at rank 1 and move UP (toward rank 7)
+            // Black pawns are at rank 6 and move DOWN (toward rank 0)
+            const direction = currentTurn === 'white' ? -1 : 1;
+            
+            console.log(`Finding pawn move to ${String.fromCharCode(97 + toFile)}${toRank + 1}`);
+            console.log(`Looking for ${pawn} piece, direction: ${direction}`);
+            console.log(`Target square content: "${board[toRank][toFile]}"`);
+            
+            // Check one square back
+            const fromRank1 = toRank + direction;
+            console.log(`Checking rank ${fromRank1} file ${toFile} for single move`);
+            if (fromRank1 >= 0 && fromRank1 < 8) {
+                console.log(`Piece at ${fromRank1},${toFile}: "${board[fromRank1][toFile]}"`);
+                if (board[fromRank1][toFile] === pawn && board[toRank][toFile] === '.') {
+                    console.log(`Found pawn at rank ${fromRank1}!`);
+                    return { fromRank: fromRank1, fromFile: toFile };
+                }
+            }
+            
+            // Check two squares back (initial move)
+            // White pawns at rank 1 can move to rank 3 (e4, d4)
+            // Black pawns at rank 6 can move to rank 4 (e5, d5)
+            console.log(`Checking if this is a double pawn move...`);
+            console.log(`White: toRank=${toRank}, should be 3 for e4/d4`);
+            console.log(`Black: toRank=${toRank}, should be 4 for e5/d5`);
+            
+            if ((currentTurn === 'white' && toRank === 3) || (currentTurn === 'black' && toRank === 4)) {
+                const fromRank2 = toRank + (2 * direction);
+                console.log(`Checking rank ${fromRank2} for double move`);
+                if (fromRank2 >= 0 && fromRank2 < 8) {
+                    console.log(`Piece at ${fromRank2},${toFile}: "${board[fromRank2][toFile]}"`);
+                    console.log(`Square between at ${fromRank1},${toFile}: "${board[fromRank1][toFile]}"`);
+                    if (board[fromRank2][toFile] === pawn && board[fromRank1][toFile] === '.' && board[toRank][toFile] === '.') {
+                        console.log(`Found pawn at rank ${fromRank2} with clear path!`);
+                        return { fromRank: fromRank2, fromFile: toFile };
+                    }
+                } else {
+                    console.log(`Rank ${fromRank2} is out of bounds!`);
+                }
+            }
+            
+            console.log('No valid pawn move found');
+            return null;
+        }
+
+        function findPawnCapture(fromFile, toFile, toRank) {
+            const pawn = currentTurn === 'white' ? 'P' : 'p';
+            const direction = currentTurn === 'white' ? -1 : 1;
+            const fromRank = toRank + direction;
+            
+            console.log(`Finding pawn capture from ${String.fromCharCode(97 + fromFile)} to ${String.fromCharCode(97 + toFile)}${toRank + 1}`);
+            console.log(`Looking for ${pawn} at rank ${fromRank}, file ${fromFile}`);
+            
+            // Check if there's a pawn on the from file that can capture
+            if (fromRank >= 0 && fromRank < 8) {
+                console.log(`Piece at ${fromRank},${fromFile}: "${board[fromRank][fromFile]}"`);
+                console.log(`Target square at ${toRank},${toFile}: "${board[toRank][toFile]}"`);
+                
+                if (board[fromRank][fromFile] === pawn && board[toRank][toFile] !== '.') {
+                    // Check if it's capturing an enemy piece
+                    const targetPiece = board[toRank][toFile];
+                    const isWhitePiece = targetPiece === targetPiece.toUpperCase();
+                    const isWhiteTurn = currentTurn === 'white';
+                    
+                    if (isWhiteTurn !== isWhitePiece) {
+                        console.log(`Found valid pawn capture!`);
+                        return { fromRank: fromRank, fromFile: fromFile };
+                    } else {
+                        console.log(`Cannot capture own piece`);
+                    }
+                } else {
+                    console.log(`No pawn or no target piece for capture`);
+                }
+            }
+            
+            console.log('No valid pawn capture found');
+            return null;
+        }
+
+        function findPieceMove(piece, toFile, toRank, fromFile, fromRank) {
+            const searchPiece = currentTurn === 'white' ? piece : piece.toLowerCase();
+            const candidates = [];
+            
+            // Find all pieces of the right type
+            for (let rank = 0; rank < 8; rank++) {
+                for (let file = 0; file < 8; file++) {
+                    if (board[rank][file] === searchPiece) {
+                        // Check if piece matches disambiguation hints
+                        if (fromFile !== null && file !== fromFile) continue;
+                        if (fromRank !== null && rank !== fromRank) continue;
+                        
+                        // Check if move is legal
+                        if (isLegalMove(rank, file, toRank, toFile)) {
+                            candidates.push({ fromRank: rank, fromFile: file });
+                        }
+                    }
+                }
+            }
+            
+            return candidates.length === 1 ? candidates[0] : null;
+        }
+
+        function isBasicLegalMove(fromRank, fromFile, toRank, toFile) {
+            if (fromRank === toRank && fromFile === toFile) return false;
+            
+            const piece = board[fromRank][fromFile];
+            if (piece === '.') return false;
+            
+            const target = board[toRank][toFile];
+            const isWhite = piece === piece.toUpperCase();
+            
+            // Can't capture own pieces
+            if (target !== '.' && (target === target.toUpperCase()) === isWhite) {
+                return false;
+            }
+            
+            const p = piece.toUpperCase();
+            const rankDiff = toRank - fromRank;
+            const fileDiff = Math.abs(toFile - fromFile);
+            const absRankDiff = Math.abs(rankDiff);
+            
+            switch (p) {
+                case 'P':
+                    // Pawn moves - white goes up (positive), black goes down (negative)
+                    if (fileDiff === 0 && target === '.') {
+                        if (isWhite && rankDiff === 1) return true;
+                        if (!isWhite && rankDiff === -1) return true;
+                        if (isWhite && fromRank === 1 && rankDiff === 2 && board[2][fromFile] === '.') return true;
+                        if (!isWhite && fromRank === 6 && rankDiff === -2 && board[5][fromFile] === '.') return true;
+                    }
+                    if (fileDiff === 1 && target !== '.') {
+                        if (isWhite && rankDiff === 1) return true;
+                        if (!isWhite && rankDiff === -1) return true;
+                    }
+                    return false;
+                    
+                case 'N':
+                    return (absRankDiff === 2 && fileDiff === 1) || (absRankDiff === 1 && fileDiff === 2);
+                    
+                case 'B':
+                    return absRankDiff === fileDiff && isPathClear(fromRank, fromFile, toRank, toFile);
+                    
+                case 'R':
+                    return (rankDiff === 0 || fileDiff === 0) && isPathClear(fromRank, fromFile, toRank, toFile);
+                    
+                case 'Q':
+                    return ((rankDiff === 0 || fileDiff === 0) || (absRankDiff === fileDiff)) && 
+                           isPathClear(fromRank, fromFile, toRank, toFile);
+                    
+                case 'K':
+                    return absRankDiff <= 1 && fileDiff <= 1;
+                    
+                default:
+                    return false;
+            }
+        }
+
+        function findKing(isWhite) {
+            const king = isWhite ? 'K' : 'k';
+            for (let rank = 0; rank < 8; rank++) {
+                for (let file = 0; file < 8; file++) {
+                    if (board[rank][file] === king) {
+                        return { rank, file };
+                    }
+                }
+            }
+            return null;
+        }
+
+        function isInCheck(isWhite) {
+            const kingPos = findKing(isWhite);
+            if (!kingPos) return false;
+            
+            // Check if any enemy piece can attack the king
+            for (let rank = 0; rank < 8; rank++) {
+                for (let file = 0; file < 8; file++) {
+                    const piece = board[rank][file];
+                    if (piece === '.') continue;
+                    
+                    const pieceIsWhite = piece === piece.toUpperCase();
+                    if (pieceIsWhite === isWhite) continue; // Same color
+                    
+                    if (isBasicLegalMove(rank, file, kingPos.rank, kingPos.file)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        function wouldBeInCheck(fromRank, fromFile, toRank, toFile, isWhite) {
+            // Simulate the move
+            const originalPiece = board[fromRank][fromFile];
+            const originalTarget = board[toRank][toFile];
+            
+            board[toRank][toFile] = originalPiece;
+            board[fromRank][fromFile] = '.';
+            
+            const inCheck = isInCheck(isWhite);
+            
+            // Restore the board
+            board[fromRank][fromFile] = originalPiece;
+            board[toRank][toFile] = originalTarget;
+            
+            return inCheck;
+        }
+
+        function isLegalMove(fromRank, fromFile, toRank, toFile) {
+            // First check basic move legality
+            if (!isBasicLegalMove(fromRank, fromFile, toRank, toFile)) {
+                return false;
+            }
+            
+            const piece = board[fromRank][fromFile];
+            const isWhite = piece === piece.toUpperCase();
+            
+            // Check if move would leave king in check
+            return !wouldBeInCheck(fromRank, fromFile, toRank, toFile, isWhite);
+        }
+
+        function isPathClear(fromRank, fromFile, toRank, toFile) {
+            const rankStep = toRank > fromRank ? 1 : (toRank < fromRank ? -1 : 0);
+            const fileStep = toFile > fromFile ? 1 : (toFile < fromFile ? -1 : 0);
+            
+            let rank = fromRank + rankStep;
+            let file = fromFile + fileStep;
+            
+            while (rank !== toRank || file !== toFile) {
+                if (board[rank][file] !== '.') return false;
+                rank += rankStep;
+                file += fileStep;
+            }
+            
+            return true;
+        }
+
+        function makeMove(from, to) {
+            const piece = board[from.rank][from.file];
+            const capture = board[to.rank][to.file] !== '.';
+            
+            // Log the move
+            console.log(`Moving ${piece} from ${String.fromCharCode(97 + from.file)}${from.rank + 1} to ${String.fromCharCode(97 + to.file)}${to.rank + 1}`);
+            
+            board[to.rank][to.file] = piece;
+            board[from.rank][from.file] = '.';
+            
+            lastMove = { from, to };
+            currentTurn = currentTurn === 'white' ? 'black' : 'white';
+            
+            renderBoard();
+            renderMoveHistory();
+        }
+
+        function makeCastle(side) {
+            const rank = currentTurn === 'white' ? 0 : 7;
+            
+            console.log(`Castling ${side} side for ${currentTurn}`);
+            
+            if (side === 'king') {
+                board[rank][6] = board[rank][4];
+                board[rank][5] = board[rank][7];
+                board[rank][4] = '.';
+                board[rank][7] = '.';
+                lastMove = { from: { rank, file: 4 }, to: { rank, file: 6 } };
+            } else {
+                board[rank][2] = board[rank][4];
+                board[rank][3] = board[rank][0];
+                board[rank][4] = '.';
+                board[rank][0] = '.';
+                lastMove = { from: { rank, file: 4 }, to: { rank, file: 2 } };
+            }
+            
+            currentTurn = currentTurn === 'white' ? 'black' : 'white';
+            renderBoard();
+            renderMoveHistory();
+        }
+
+        // Enhanced computer player with chess rules
+        function makeComputerMove() {
+            const moves = [];
+            const isWhite = currentTurn === 'white';
+            const inCheck = isInCheck(isWhite);
+            
+            console.log(`AI thinking as ${currentTurn}... ${inCheck ? '(IN CHECK!)' : ''}`);
+            
+            // Generate all legal moves
+            for (let fromRank = 0; fromRank < 8; fromRank++) {
+                for (let fromFile = 0; fromFile < 8; fromFile++) {
+                    const piece = board[fromRank][fromFile];
+                    if (piece === '.' || (piece === piece.toUpperCase()) !== isWhite) continue;
+                    
+                    for (let toRank = 0; toRank < 8; toRank++) {
+                        for (let toFile = 0; toFile < 8; toFile++) {
+                            if (isLegalMove(fromRank, fromFile, toRank, toFile)) {
+                                const target = board[toRank][toFile];
+                                let score = 1; // Base score
+                                
+                                // If in check, escaping check is highest priority
+                                if (inCheck) {
+                                    score += 1000; // Huge bonus for any legal move when in check
+                                }
+                                
+                                // Prioritize captures with proper piece values
+                                if (target !== '.') {
+                                    const pieceValues = { 'p': 1, 'n': 3, 'b': 3, 'r': 5, 'q': 9, 'k': 100 };
+                                    const captureValue = pieceValues[target.toLowerCase()] || 1;
+                                    const pieceValue = pieceValues[piece.toLowerCase()] || 1;
+                                    
+                                    // Good capture if we're taking something more valuable
+                                    if (captureValue >= pieceValue) {
+                                        score += captureValue * 10;
+                                    } else {
+                                        score += captureValue * 5; // Still bonus but less
+                                    }
+                                }
+                                
+                                // Check if this move gives check to opponent
+                                const originalPiece = board[fromRank][fromFile];
+                                const originalTarget = board[toRank][toFile];
+                                board[toRank][toFile] = originalPiece;
+                                board[fromRank][fromFile] = '.';
+                                
+                                if (isInCheck(!isWhite)) {
+                                    score += 50; // Bonus for giving check
+                                }
+                                
+                                // Restore board
+                                board[fromRank][fromFile] = originalPiece;
+                                board[toRank][toFile] = originalTarget;
+                                
+                                // Prioritize center control (e4, e5, d4, d5 squares)
+                                if ((toFile >= 3 && toFile <= 4) && (toRank >= 3 && toRank <= 4)) {
+                                    score += 5;
+                                }
+                                
+                                // Prioritize development in opening
+                                if (algebraicMoveHistory.length < 10) {
+                                    if (piece.toLowerCase() === 'n' || piece.toLowerCase() === 'b') {
+                                        const homeRank = isWhite ? 0 : 7;
+                                        if (fromRank === homeRank) {
+                                            score += 8; // Development bonus
+                                        }
+                                    }
+                                }
+                                
+                                // Slight penalty for moving same piece multiple times in opening
+                                if (algebraicMoveHistory.length < 16) {
+                                    const fromSquare = String.fromCharCode(97 + fromFile) + (fromRank + 1);
+                                    const pieceMoves = algebraicMoveHistory.filter(move => 
+                                        move.includes(fromSquare) || 
+                                        (piece.toLowerCase() === 'n' && move.startsWith('N')) ||
+                                        (piece.toLowerCase() === 'b' && move.startsWith('B'))
+                                    );
+                                    if (pieceMoves.length > 1) {
+                                        score -= 3;
+                                    }
+                                }
+                                
+                                // Add small randomness for variety
+                                score += Math.random() * 1;
+                                
+                                moves.push({
+                                    from: { rank: fromRank, file: fromFile },
+                                    to: { rank: toRank, file: toFile },
+                                    piece: piece,
+                                    capture: target !== '.',
+                                    score: score
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if (moves.length === 0) {
+                if (inCheck) {
+                    document.getElementById('output').innerHTML = '<span class="error">Checkmate! You win!</span>';
+                } else {
+                    document.getElementById('output').innerHTML = '<span class="error">Stalemate! Draw.</span>';
+                }
+                return;
+            }
+            
+            // Sort by score and pick from top moves
+            moves.sort((a, b) => b.score - a.score);
+            
+            // If in check, always pick the best move
+            // Otherwise, pick from top 3-5 moves for variety
+            const numTopMoves = inCheck ? 1 : Math.min(5, Math.max(3, moves.length));
+            const topMoves = moves.slice(0, numTopMoves);
+            const move = topMoves[Math.floor(Math.random() * topMoves.length)];
+            
+            console.log(`AI evaluated ${moves.length} legal moves, chose: ${generateAlgebraicNotation(move.piece, move.from, move.to, move.capture)} (score: ${move.score.toFixed(2)})`);
+            
+            const algebraic = generateAlgebraicNotation(move.piece, move.from, move.to, move.capture);
+            
+            makeMove(move.from, move.to);
+            algebraicMoveHistory.push(algebraic);
+            
+            // Check if opponent is now in check
+            const opponentInCheck = isInCheck(!isWhite);
+            let message = `AI plays: ${algebraic}`;
+            if (opponentInCheck) {
+                message += ' - Check!';
+            }
+            
+            document.getElementById('output').innerHTML = `<span class="info">${message}</span>`;
+            
+            // Display game state for next player's turn
+            setTimeout(() => displayGameState(), 1000);
+        }
+
+        function displayGameState() {
+            const outputEl = document.getElementById('output');
+            const playerInCheck = isInCheck(currentTurn === 'white');
+            
+            if (playerInCheck) {
+                outputEl.innerHTML = '<span class="error">You are in check! Make a legal move.</span>';
+            } else {
+                outputEl.innerHTML = '<span class="info">Your turn. Enter a move:</span>';
+            }
+        }
+
+        function processCommand(input) {
+            const outputEl = document.getElementById('output');
+            
+            console.log(`Current turn: ${currentTurn}`);
+            
+            if (input.toLowerCase() === 'help') {
+                outputEl.innerHTML = '<span class="info">Enter moves: e4, d4, Nf3, Bxe5, O-O, or UCI: e2e4</span>';
+                return;
+            }
+            
+            if (input.toLowerCase() === 'quit' || input.toLowerCase() === 'exit') {
+                outputEl.innerHTML = '<span class="info">Thanks for playing!</span>';
+                return;
+            }
+            
+            // Debug commands
+            if (input.toLowerCase() === 'fen') {
+                outputEl.innerHTML = `<span class="info">FEN: Current board position (simplified view)</span>`;
+                return;
+            }
+            
+            if (input.toLowerCase() === 'engine') {
+                outputEl.innerHTML = `<span class="info">Engine ready: ${engineReady}</span>`;
+                return;
+            }
+            
+            const move = parseMove(input);
+            if (!move) {
+                outputEl.innerHTML = `<span class="error">bash: ${input}: command not found</span>`;
+                return;
+            }
+            
+            console.log('Parsed move:', move);
+            
+            let success = false;
+            
+            if (move.type === 'castle') {
+                makeCastle(move.side);
+                algebraicMoveHistory.push(move.side === 'king' ? 'O-O' : 'O-O-O');
+                success = true;
+            } else if (move.type === 'uci') {
+                const from = {
+                    file: move.from.charCodeAt(0) - 97,
+                    rank: parseInt(move.from[1]) - 1
+                };
+                const to = {
+                    file: move.to.charCodeAt(0) - 97,
+                    rank: parseInt(move.to[1]) - 1
+                };
+                
+                if (isLegalMove(from.rank, from.file, to.rank, to.file)) {
+                    const piece = board[from.rank][from.file];
+                    if ((currentTurn === 'white' && piece === piece.toUpperCase()) ||
+                        (currentTurn === 'black' && piece === piece.toLowerCase())) {
+                        const capture = board[to.rank][to.file] !== '.';
+                        const algebraic = generateAlgebraicNotation(piece, from, to, capture);
+                        makeMove(from, to);
+                        algebraicMoveHistory.push(algebraic);
+                        success = true;
+                    }
+                }
+            } else if (move.type === 'pawn_capture') {
+                console.log('Processing pawn capture...');
+                const result = findPawnCapture(move.fromFile, move.toFile, move.toRank);
+                if (result) {
+                    console.log(`Moving pawn from ${result.fromRank},${result.fromFile} to ${move.toRank},${move.toFile}`);
+                    const piece = board[result.fromRank][result.fromFile];
+                    const algebraic = String.fromCharCode(97 + move.fromFile) + 'x' + 
+                        String.fromCharCode(97 + move.toFile) + (move.toRank + 1);
+                    makeMove(
+                        { rank: result.fromRank, file: result.fromFile },
+                        { rank: move.toRank, file: move.toFile }
+                    );
+                    algebraicMoveHistory.push(algebraic);
+                    success = true;
+                } else {
+                    console.log('No valid pawn capture found for this move');
+                }
+            } else if (move.type === 'pawn') {
+                console.log('Processing pawn move...');
+                const result = findPawnMove(move.toFile, move.toRank);
+                if (result) {
+                    console.log(`Moving pawn from ${result.fromRank},${result.fromFile} to ${move.toRank},${move.toFile}`);
+                    const capture = board[move.toRank][move.toFile] !== '.';
+                    const piece = board[result.fromRank][result.fromFile];
+                    const algebraic = capture ? 
+                        String.fromCharCode(97 + result.fromFile) + 'x' + input.toLowerCase() :
+                        input.toLowerCase();
+                    makeMove(
+                        { rank: result.fromRank, file: result.fromFile },
+                        { rank: move.toRank, file: move.toFile }
+                    );
+                    algebraicMoveHistory.push(algebraic);
+                    success = true;
+                } else {
+                    console.log('No valid pawn found for this move');
+                }
+            } else if (move.type === 'piece') {
+                const result = findPieceMove(move.piece, move.toFile, move.toRank, move.fromFile, move.fromRank);
+                if (result) {
+                    const capture = board[move.toRank][move.toFile] !== '.';
+                    const piece = board[result.fromRank][result.fromFile];
+                    const algebraic = generateAlgebraicNotation(piece,
+                        { rank: result.fromRank, file: result.fromFile },
+                        { rank: move.toRank, file: move.toFile },
+                        capture);
+                    makeMove(
+                        { rank: result.fromRank, file: result.fromFile },
+                        { rank: move.toRank, file: move.toFile }
+                    );
+                    algebraicMoveHistory.push(algebraic);
+                    success = true;
+                }
+            }
+            
+            if (success) {
+                // Check if opponent is now in check
+                const opponentInCheck = isInCheck(currentTurn === 'white');
+                let message = 'Move executed.';
+                if (opponentInCheck) {
+                    message += ' - Check!';
+                }
+                outputEl.innerHTML = `<span class="info">${message}</span>`;
+                setTimeout(() => requestStockfishMove(), 500);
+            } else {
+                const playerInCheck = isInCheck(currentTurn === 'white');
+                let errorMessage = 'Illegal move. Try again.';
+                if (playerInCheck) {
+                    errorMessage = 'Illegal move. You are in check!';
+                }
+                outputEl.innerHTML = `<span class="error">${errorMessage}</span>`;
+            }
+        }
+
+        // Initialize the game
+        window.onload = function() {
+            // Log initial board state
+            console.log('Initial board state:');
+            console.log('Files: a b c d e f g h');
+            for (let rank = 7; rank >= 0; rank--) {
+                let row = `Rank ${rank + 1}: `;
+                for (let file = 0; file < 8; file++) {
+                    row += board[rank][file] + ' ';
+                }
+                console.log(row);
+            }
+            
+            console.log('\nArray indices (for debugging):');
+            console.log('Rank 1 (white pieces) = board[0]');
+            console.log('Rank 2 (white pawns) = board[1]');
+            console.log('Rank 4 (e4/d4 destination) = board[3]');
+            console.log('Rank 8 (black pieces) = board[7]');
+            
+            console.log('\nAdditional debug commands:');
+            console.log('Type "fen" to see current position');
+            console.log('Type "engine" to check if Stockfish is ready');
+            
+            renderBoard();
+            renderMoveHistory();
+            document.getElementById('output').innerHTML = '<span class="info">Initializing AI engine...</span>';
+            
+            // Initialize AI
+            initStockfish();
+            
+            // Show initial game state after a brief delay
+            setTimeout(() => displayGameState(), 1500);
+            
+            // Handle input
+            document.getElementById('input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const input = e.target.value.trim();
+                    if (input) {
+                        console.log(`\n=== Processing move: ${input} ===`);
+                        processCommand(input);
+                        e.target.value = '';
+                    }
+                }
+            });
+        };
+    </script>
+</body>
+</html>
