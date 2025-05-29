@@ -36,6 +36,7 @@ interface EditorState {
   cursorLine: number;
   cursorCol: number;
   message: string;
+  path: string[]; // Store the path where the editor was opened
 }
 
 const initialFileSystem: Directory = {
@@ -641,7 +642,8 @@ const Hero: React.FC = () => {
     mode: 'normal',
     cursorLine: 0,
     cursorCol: 0,
-    message: ''
+    message: '',
+    path: ['/']
   });
   const [sudoState, setSudoState] = useState<{
     isWaitingForPassword: boolean;
@@ -695,6 +697,37 @@ const Hero: React.FC = () => {
     return currentDir.owner === username || path.includes('garrettyokley');
   };
 
+  const updateFileContent = (path: string[], filename: string, content: string): boolean => {
+    // Check write permission for the specific file
+    if (!hasWritePermission(path, filename)) {
+      return false;
+    }
+    
+    try {
+      const newFs = JSON.parse(JSON.stringify(fileSystem));
+      let currentDir = newFs;
+      
+      // Navigate to the directory
+      for (const segment of path.slice(1)) {
+        if (currentDir.children && currentDir.children[segment] && currentDir.children[segment].type === 'dir') {
+          currentDir = currentDir.children[segment] as Directory;
+        } else {
+          return false;
+        }
+      }
+      
+      // Update the file content
+      if (currentDir.children && currentDir.children[filename] && currentDir.children[filename].type === 'file') {
+        currentDir.children[filename].content = content;
+        updateFileSystem(newFs);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  };
+
   const createFile = (path: string[], filename: string, content: string = '', permissions: string = '-rw-r--r--'): boolean => {
     // Check write permission first
     if (!hasWritePermission(path)) {
@@ -727,7 +760,7 @@ const Hero: React.FC = () => {
         return true;
       }
       return false;
-    } catch {
+    } catch (error) {
       return false;
     }
   };
@@ -822,37 +855,6 @@ const Hero: React.FC = () => {
       // Delete the directory recursively
       if (currentDir.children && currentDir.children[dirname]) {
         delete currentDir.children[dirname];
-        updateFileSystem(newFs);
-        return true;
-      }
-      return false;
-    } catch {
-      return false;
-    }
-  };
-
-  const updateFileContent = (path: string[], filename: string, content: string): boolean => {
-    // Check write permission for the specific file
-    if (!hasWritePermission(path, filename)) {
-      return false;
-    }
-    
-    try {
-      const newFs = JSON.parse(JSON.stringify(fileSystem));
-      let currentDir = newFs;
-      
-      // Navigate to the directory
-      for (const segment of path.slice(1)) {
-        if (currentDir.children && currentDir.children[segment] && currentDir.children[segment].type === 'dir') {
-          currentDir = currentDir.children[segment] as Directory;
-        } else {
-          return false;
-        }
-      }
-      
-      // Update the file content
-      if (currentDir.children && currentDir.children[filename] && currentDir.children[filename].type === 'file') {
-        currentDir.children[filename].content = content;
         updateFileSystem(newFs);
         return true;
       }
@@ -963,7 +965,7 @@ const Hero: React.FC = () => {
     };
 
     const saveFile = () => {
-      updateFileContent(currentPath, editor.filename, editor.content);
+      updateFileContent(editor.path, editor.filename, editor.content);
     };
 
     const closeEditor = () => {
@@ -975,7 +977,8 @@ const Hero: React.FC = () => {
         mode: 'normal',
         cursorLine: 0,
         cursorCol: 0,
-        message: ''
+        message: '',
+        path: ['/']
       });
     };
 
@@ -1326,6 +1329,25 @@ const Hero: React.FC = () => {
       .replace(/^l\b/, 'ls -CF');
     
     const [cmd, ...args] = aliasedCommand.split(/\s+/);
+    
+    // Handle empty commands (just Enter or whitespace) - behave like real Linux
+    if (!cmd || cmd.trim() === '') {
+      // If not in silent mode, just show the prompt line without any output
+      if (!silent) {
+        const newLines = [
+          ...lines,
+          <div key={`line-${lines.length}-prompt`} className="font-mono mb-1 flex items-center">
+            {renderPrompt(getPrompt())}
+            <span style={{ color: 'white' }}>{command}</span>
+          </div>
+        ];
+        setLines(newLines);
+        setCurrentInput('');
+        setCursorPosition(0);
+      }
+      return { success: true, output: [], newPath: pathContext };
+    }
+    
     const output: React.ReactNode[] = [];
     let success = true;
     let newPath: string[] | undefined = undefined;
@@ -1348,63 +1370,40 @@ const Hero: React.FC = () => {
 
     switch (cmd.toLowerCase()) {
       case 'help':
+        output.push('\n');
         output.push(<TerminalText textType="info" key="help-title">Available commands:</TerminalText>);
-        output.push('  help          - Show this help message');
-        output.push('  ls            - List directory contents');
-        output.push(<TerminalText textType="dim" key="help-ls-a">                  -a: show all files including . and ..</TerminalText>);
-        output.push(<TerminalText textType="dim" key="help-ls-A">                  -A: show hidden files but not . and ..</TerminalText>);
-        output.push(<TerminalText textType="dim" key="help-ls-l">                  -l: long format with details</TerminalText>);
-        output.push(<TerminalText textType="dim" key="help-ls-F">                  -F: append indicators (/ for directories)</TerminalText>);
-        output.push('  cd [dir]      - Change directory (supports absolute and relative paths)');
-        output.push('  cat [file]    - Display file content');
-        output.push('  xdg-open      - Execute/open file (links, applications)');
-        output.push('  echo          - Display a line of text');
-        output.push('  clear         - Clear the terminal');
-        output.push('  whoami        - Display current user');
-        output.push('  date          - Display current date and time');
-        output.push('  pwd           - Print working directory');
-        output.push('  open          - Open/view file (alias for xdg-open)');
-        output.push('');
+        output.push('help            - Show this help message');
+        output.push('ls              - List directory contents');
+        output.push('                     - a: show all files including . and ..');
+        output.push('                     - A: show hidden files but not . and ..');
+        output.push('                     - l: long format with details');
+        output.push('                     - F: append indicators (/ for directories)');
+        output.push('cd              - Change directory (supports absolute and relative paths)');
+        output.push('cat             - Display file content');
+        output.push('xdg-open        - Execute/open file (links, applications)');
+        output.push('echo            - Display a line of text');
+        output.push('clear           - Clear the terminal');
+        output.push('whoami          - Display current user');
+        output.push('date            - Display current date and time');
+        output.push('pwd             - Print working directory');
+        output.push('open            - Open/view file (alias for xdg-open)');
+        output.push('\n');
         output.push(<TerminalText textType="info" key="help-file-ops">File Operations:</TerminalText>);
-        output.push('  touch         - Create empty file');
-        output.push('  mkdir         - Create directory');
-        output.push('  rm            - Remove file');
-        output.push('  cp            - Copy file');
-        output.push('  mv            - Move/rename file');
-        output.push('');
+        output.push('touch           - Create empty file');
+        output.push('mkdir           - Create directory');
+        output.push('rm              - Remove file');
+        output.push('cp              - Copy file');
+        output.push('mv              - Move/rename file');
+        output.push('\n');
         output.push(<TerminalText textType="info" key="help-editors">Text Editors:</TerminalText>);
-        output.push('  vim [file]    - Vi/Vim editor (authentic Ubuntu vim behavior)');
-        output.push(<TerminalText textType="dim" key="help-vim-modes">                  Normal mode: i=insert, o=new line, x=delete, hjkl=move</TerminalText>);
-        output.push(<TerminalText textType="dim" key="help-vim-cmds">                  Commands: :w=save, :wq=save&quit, :q!=force quit</TerminalText>);
-        output.push('  nano [file]   - Nano editor (Ctrl+O=save, Ctrl+X=exit)');
-        output.push('  emacs [file]  - Emacs editor (simplified)');
-        output.push('');
-        output.push(<TerminalText textType="info" key="help-system">System Commands:</TerminalText>);
-        output.push('  sudo [cmd]    - Execute command as root (password: Password)');
-        output.push('  su [user]     - Switch user');
-        output.push('  ps            - Show running processes');
-        output.push('  kill [pid]    - Terminate process');
-        output.push('  chmod [perms] [file] - Change file permissions');
-        output.push('  chown [user] [file]  - Change file ownership (root only)');
-        output.push('');
-        output.push(<TerminalText textType="info" key="help-aliases">Aliases:</TerminalText>);
-        output.push('  ll            - ls -alF (detailed list with all files)');
-        output.push('  la            - ls -A (show hidden files)');
-        output.push('  l             - ls -CF (classified short format)');
-        output.push('');
-        output.push(<TerminalText textType="info" key="help-portfolio">Portfolio commands:</TerminalText>);
-        output.push('  certifications - View certifications');
-        output.push('  certs         - View certifications (alias)');
-        output.push('  projects      - View projects');
-        output.push('  links         - View links');
-        output.push('  portfolio     - Show portfolio sections');
-        output.push('');
+        output.push('vim             - Vi/Vim editor');
+        output.push('\n');
         output.push(<TerminalText textType="info" key="help-tips">Tips:</TerminalText>);
-        output.push(<TerminalText textType="dim" key="help-tip-1">  - Use Tab for autocomple</TerminalText>);
-        output.push(<TerminalText textType="dim" key="help-tip-2">  - Use Up/Down arrows for command history</TerminalText>);
-        output.push(<TerminalText textType="dim" key="help-tip-4">  - Try: cd ~/Documents && xdg-open "Garrett Yokley.pdf"</TerminalText>);
-        output.push(<TerminalText textType="dim" key="help-tip-5">  - Try: sudo rm -rf / (Password: Password)</TerminalText>);
-        output.push(<TerminalText textType="dim" key="help-tip-6">  - Try: touch /etc/test (will show permission error)</TerminalText>);
+        output.push('                - Use Tab for autocomple');
+        output.push('                - Use Up/Down arrows for command history');
+        output.push('                - Try: cd ~/Documents && xdg-open "Garrett Yokley.pdf"');
+        output.push('                - Try: touch /etc/test (will show permission error');
+        output.push('                - Try: sudo rm -rf / (Password: Password)');
         break;
       case 'ls':
         const showHidden = args.includes('-a') || args.includes('-A');
@@ -1412,6 +1411,10 @@ const Hero: React.FC = () => {
         const longFormat = args.includes('-l');
         const classify = args.includes('-F');
         const currentDir = getCurrentDirectoryFromPath(pathContext);
+        
+        console.log('LS Debug - Current directory:', currentDir);
+        console.log('LS Debug - Children:', currentDir.children ? Object.keys(currentDir.children) : 'No children');
+        
         let entries: string[] = [];
         
         if (showAll) {
@@ -1720,18 +1723,33 @@ const Hero: React.FC = () => {
           isNewFile = false;
         }
         
+        // Add the vim command to terminal history first (if not in silent mode)
+        if (!silent) {
+          const newLines = [
+            ...lines,
+            <div key={`line-${lines.length}-prompt`} className="font-mono mb-1 flex items-center">
+              {renderPrompt(getPrompt())}
+              <span style={{ color: 'white' }}>{command}</span>
+            </div>
+          ];
+          setLines(newLines);
+          setCurrentInput('');
+          setCursorPosition(0);
+        }
+        
         // Open vim (don't clear terminal - just open editor)
         setEditor({
           isOpen: true,
           editor: 'vim',
-          filename: vimFile,
+          filename: vimFile === 'untitled.txt' ? '' : vimFile, // Use empty string for no filename
           content: vimContent,
           mode: 'normal', // Start in normal mode, not insert!
           cursorLine: 0,
           cursorCol: 0,
-          message: isNewFile ? `"${vimFile}" [New File]` : `"${vimFile}" ${vimContent.split('\n').length}L, ${vimContent.length}C`
+          message: isNewFile ? (vimFile === 'untitled.txt' ? '[No Name]' : `"${vimFile}" [New File]`) : `"${vimFile}" ${vimContent.split('\n').length}L, ${vimContent.length}C`,
+          path: [...pathContext] // Store the path where vim was opened
         });
-        return { success: true, output: [] };
+        return { success: true, output: [], newPath: pathContext };
 
       case 'nano':
         let nanoFile = args.join(' ');
@@ -1744,6 +1762,20 @@ const Hero: React.FC = () => {
           nanoContent = currentDir5.children[nanoFile].content || '';
         }
         
+        // Add the nano command to terminal history first (if not in silent mode)
+        if (!silent) {
+          const newLines = [
+            ...lines,
+            <div key={`line-${lines.length}-prompt`} className="font-mono mb-1 flex items-center">
+              {renderPrompt(getPrompt())}
+              <span style={{ color: 'white' }}>{command}</span>
+            </div>
+          ];
+          setLines(newLines);
+          setCurrentInput('');
+          setCursorPosition(0);
+        }
+        
         // Open nano (don't clear terminal - just open editor)
         setEditor({
           isOpen: true,
@@ -1753,9 +1785,10 @@ const Hero: React.FC = () => {
           mode: 'normal',
           cursorLine: 0,
           cursorCol: 0,
-          message: `GNU nano - ${nanoFile}`
+          message: `GNU nano - ${nanoFile}`,
+          path: [...pathContext] // Add missing path property
         });
-        return { success: true, output: [] };
+        return { success: true, output: [], newPath: pathContext };
 
       case 'emacs':
         const emacsFile = args.join(' ');
@@ -1779,7 +1812,8 @@ const Hero: React.FC = () => {
           mode: 'normal',
           cursorLine: 0,
           cursorCol: 0,
-          message: `GNU Emacs (simplified) - ${emacsFile}`
+          message: `GNU Emacs (simplified) - ${emacsFile}`,
+          path: [...pathContext] // Add missing path property
         });
         break;
 
@@ -1958,11 +1992,67 @@ const Hero: React.FC = () => {
         }
         const mvSourceDir = getCurrentDirectoryFromPath(pathContext);
         if (mvSourceDir.children && mvSourceDir.children[mvSource]) {
-          const sourceContent = mvSourceDir.children[mvSource].content || '';
-          if (hasWritePermission(pathContext, mvSource) && createFile(pathContext, mvDest, sourceContent) && deleteFile(pathContext, mvSource)) {
-            output.push(<span style={{ color: '#00ff00' }}>Moved {mvSource} to {mvDest}</span>);
+          const sourceNode = mvSourceDir.children[mvSource];
+          
+          // Check if we have permission to delete the source
+          if (!hasWritePermission(pathContext, mvSource)) {
+            output.push(<TerminalText textType="error" key="mv-error-perm">mv: cannot move '{mvSource}': Permission denied</TerminalText>);
+            success = false;
+            break;
+          }
+          
+          // For files, copy content and then delete source
+          if (sourceNode.type === 'file') {
+            const sourceContent = sourceNode.content || '';
+            const sourcePermissions = sourceNode.permissions || '-rw-r--r--';
+            
+            // Check write permissions
+            if (!hasWritePermission(pathContext, mvSource)) {
+              output.push(<TerminalText textType="error" key="mv-error-perm">mv: cannot move '{mvSource}': Permission denied</TerminalText>);
+              success = false;
+              break;
+            }
+            
+            // Do both create and delete in a single file system update
+            try {
+              const newFs = JSON.parse(JSON.stringify(fileSystem));
+              let currentDir = newFs;
+              
+              // Navigate to the directory
+              for (const segment of pathContext.slice(1)) {
+                if (currentDir.children && currentDir.children[segment] && currentDir.children[segment].type === 'dir') {
+                  currentDir = currentDir.children[segment] as Directory;
+                } else {
+                  throw new Error('Directory not found');
+                }
+              }
+              
+              if (currentDir.children) {
+                // Create the new file
+                currentDir.children[mvDest] = {
+                  type: 'file',
+                  content: sourceContent,
+                  permissions: sourcePermissions,
+                  owner: isRoot ? 'root' : username,
+                  group: isRoot ? 'root' : username
+                };
+                
+                // Delete the source file
+                delete currentDir.children[mvSource];
+                
+                // Update file system once
+                updateFileSystem(newFs);
+                output.push(<span style={{ color: '#00ff00' }}>Moved {mvSource} to {mvDest}</span>);
+              } else {
+                throw new Error('No children directory');
+              }
+            } catch (error) {
+              output.push(<TerminalText textType="error" key="mv-error-create">mv: cannot move '{mvSource}' to '{mvDest}': Operation failed</TerminalText>);
+              success = false;
+            }
           } else {
-            output.push(<TerminalText textType="error" key="mv-error">mv: cannot move '{mvSource}' to '{mvDest}': Permission denied</TerminalText>);
+            // For directories, we'd need recursive move logic (simplified for now)
+            output.push(<TerminalText textType="error" key="mv-error-dir">mv: cannot move directory '{mvSource}': Operation not supported</TerminalText>);
             success = false;
           }
         } else {
@@ -2369,6 +2459,12 @@ const Hero: React.FC = () => {
       if (e.key === 'Enter') {
         const command = editor.message.slice(1); // Remove ':'
         handleVimCommand(command);
+        // Reset to normal mode after a brief delay to ensure command executes
+        setTimeout(() => {
+          if (editor.isOpen) {
+            setEditor(prev => ({ ...prev, mode: 'normal', message: '' }));
+          }
+        }, 10);
       } else if (e.key === 'Escape') {
         setEditor(prev => ({ ...prev, mode: 'normal', message: '' }));
       } else if (e.key === 'Backspace') {
@@ -2400,7 +2496,8 @@ const Hero: React.FC = () => {
             mode: 'normal',
             cursorLine: 0,
             cursorCol: 0,
-            message: ''
+            message: '',
+            path: ['/'] // Add missing path property
           });
           const newLines = [
             ...lines,
@@ -2529,23 +2626,46 @@ const Hero: React.FC = () => {
           {Array.from({ length: displayLines }, (_, i) => {
             const line = editorLines[i];
             const isContentLine = i < editorLines.length;
+            const isCurrentLine = i === editor.cursorLine;
             
             return (
-              <div key={i} className="font-mono h-6 flex items-center">
+              <div key={i} className="font-mono h-8 flex items-center relative py-1">
                 {isContentLine ? (
-                  <span className="text-green-400">
-                    {line || ' '}
-                    {/* Show cursor only on current line in insert mode */}
-                    {i === editor.cursorLine && editor.mode === 'insert' && (
-                      <span className="bg-green-400 text-black animate-pulse">|</span>
-                    )}
-                    {/* Show cursor block in normal mode */}
-                    {i === editor.cursorLine && editor.mode === 'normal' && (
-                      <span className="bg-green-400 text-black">█</span>
+                  <span className="text-green-400 relative w-full">
+                    {line || (isCurrentLine ? '' : ' ')}
+                    {/* Show cursor only on current line */}
+                    {isCurrentLine && (
+                      <>
+                        {editor.mode === 'insert' ? (
+                          // Insert mode: thin line cursor - positioned higher to match ~ character spacing
+                          <span 
+                            className="absolute bg-green-400 animate-pulse"
+                            style={{ 
+                              left: `${editor.cursorCol * 0.6}em`,
+                              width: '2px',
+                              height: '1.2em',
+                              top: '0.1em' // Move cursor down slightly to match ~ character vertical centering
+                            }}
+                          />
+                        ) : (
+                          // Normal mode: block cursor - positioned higher to match ~ character spacing
+                          <span 
+                            className="absolute bg-green-400 text-black flex items-center justify-center"
+                            style={{ 
+                              left: `${editor.cursorCol * 0.6}em`,
+                              width: '0.6em',
+                              height: '1.2em',
+                              top: '0.1em' // Move cursor down slightly to match ~ character vertical centering
+                            }}
+                          >
+                            {line && line[editor.cursorCol] ? line[editor.cursorCol] : ' '}
+                          </span>
+                        )}
+                      </>
                     )}
                   </span>
                 ) : (
-                  <span className="text-blue-500">~</span>
+                  <span className="text-blue-500 flex items-start h-full pt-2">~</span>
                 )}
               </div>
             );
@@ -2558,7 +2678,7 @@ const Hero: React.FC = () => {
           {editor.mode === 'command' && editor.message}
           {editor.mode === 'normal' && (
             <span>
-              "{editor.filename}" {totalLines}L, {editor.content.length}C
+              "{editor.filename || '[No Name]'}" {totalLines}L, {editor.content.length}C
               {editor.content !== '' && ' [Modified]'}
             </span>
           )}
@@ -2597,20 +2717,32 @@ const Hero: React.FC = () => {
     
     if (cmd === 'w' || cmd === 'write') {
       // Save file
-      if (editor.filename === 'untitled.txt' && editor.content.trim() !== '') {
-        // Prompt for filename for untitled files with content
+      if (!editor.filename && editor.content.trim() !== '') {
+        // No filename specified and has content - require filename
         setEditor(prev => ({ 
           ...prev, 
           mode: 'normal', 
-          message: 'E32: No file name. Use ":w filename" to save.' 
+          message: 'E32: No file name' 
         }));
         return;
       }
       
-      // Create or update the file
-      const success = editor.filename === 'untitled.txt' && editor.content.trim() === '' 
-        ? true // Don't save empty untitled files
-        : createFile(currentPath, editor.filename, editor.content);
+      if (!editor.filename && editor.content.trim() === '') {
+        // No filename and no content - nothing to save
+        setEditor(prev => ({ 
+          ...prev, 
+          mode: 'normal', 
+          message: 'E32: No file name' 
+        }));
+        return;
+      }
+      
+      // Try to update existing file first, then create new file if it doesn't exist
+      let success = updateFileContent(editor.path, editor.filename, editor.content);
+      
+      if (!success) {
+        success = createFile(editor.path, editor.filename, editor.content);
+      }
       
       if (success) {
         const lines = editor.content.split('\n').length;
@@ -2620,28 +2752,22 @@ const Hero: React.FC = () => {
           message: `"${editor.filename}" ${lines}L, ${editor.content.length}C written` 
         }));
       } else {
-        // Try updating existing file instead
-        const updateSuccess = updateFileContent(currentPath, editor.filename, editor.content);
-        if (updateSuccess) {
-          const lines = editor.content.split('\n').length;
-          setEditor(prev => ({ 
-            ...prev, 
-            mode: 'normal', 
-            message: `"${editor.filename}" ${lines}L, ${editor.content.length}C written` 
-          }));
-        } else {
-          setEditor(prev => ({ 
-            ...prev, 
-            mode: 'normal', 
-            message: `E13: File exists (add ! to override)` 
-          }));
-        }
+        setEditor(prev => ({ 
+          ...prev, 
+          mode: 'normal', 
+          message: `E13: Permission denied writing "${editor.filename}"` 
+        }));
       }
     } else if (cmd.startsWith('w ')) {
       // Save with filename
       const filename = cmd.slice(2).trim();
       if (filename) {
-        const success = createFile(currentPath, filename, editor.content);
+        // Try to update existing file first, then create new file if it doesn't exist
+        let success = updateFileContent(editor.path, filename, editor.content);
+        if (!success) {
+          success = createFile(editor.path, filename, editor.content);
+        }
+        
         if (success) {
           const lines = editor.content.split('\n').length;
           setEditor(prev => ({ 
@@ -2651,67 +2777,56 @@ const Hero: React.FC = () => {
             message: `"${filename}" ${lines}L, ${editor.content.length}C written` 
           }));
         } else {
-          // Try updating existing file
-          const updateSuccess = updateFileContent(currentPath, filename, editor.content);
-          if (updateSuccess) {
-            const lines = editor.content.split('\n').length;
-            setEditor(prev => ({ 
-              ...prev, 
-              filename: filename,
-              mode: 'normal', 
-              message: `"${filename}" ${lines}L, ${editor.content.length}C written` 
-            }));
-          } else {
-            setEditor(prev => ({ 
-              ...prev, 
-              mode: 'normal', 
-              message: `E13: File exists (add ! to override)` 
-            }));
-          }
+          setEditor(prev => ({ 
+            ...prev, 
+            mode: 'normal', 
+            message: `E13: Permission denied writing "${filename}"` 
+          }));
         }
       }
     } else if (cmd === 'wq' || cmd === 'x') {
       // Save and quit
-      if (editor.filename === 'untitled.txt' && editor.content.trim() !== '') {
+      if (!editor.filename && editor.content.trim() !== '') {
+        // No filename specified and has content - require filename
         setEditor(prev => ({ 
           ...prev, 
           mode: 'normal', 
-          message: 'E32: No file name. Use ":wq filename" to save and quit.' 
+          message: 'E32: No file name' 
         }));
         return;
       }
       
       // Save the file first
       let saveSuccess = false;
-      if (editor.filename === 'untitled.txt' && editor.content.trim() === '') {
-        saveSuccess = true; // Don't save empty untitled files, just quit
+      if (!editor.filename && editor.content.trim() === '') {
+        saveSuccess = true; // No filename and no content - just quit
       } else {
-        saveSuccess = createFile(currentPath, editor.filename, editor.content);
+        // Try to update existing file first, then create new file if it doesn't exist
+        saveSuccess = updateFileContent(editor.path, editor.filename, editor.content);
         if (!saveSuccess) {
-          // Try updating existing file
-          saveSuccess = updateFileContent(currentPath, editor.filename, editor.content);
+          saveSuccess = createFile(editor.path, editor.filename, editor.content);
         }
       }
       
       if (saveSuccess) {
-        exitVim(editor.filename === 'untitled.txt' && editor.content.trim() === '' 
+        exitVim(!editor.filename && editor.content.trim() === '' 
           ? undefined 
           : `"${editor.filename}" written`);
       } else {
         setEditor(prev => ({ 
           ...prev, 
           mode: 'normal', 
-          message: `E13: File exists (add ! to override)` 
+          message: `E13: Permission denied writing "${editor.filename}"` 
         }));
       }
     } else if (cmd.startsWith('wq ')) {
       // Save with filename and quit
       const filename = cmd.slice(3).trim();
       if (filename) {
-        let saveSuccess = createFile(currentPath, filename, editor.content);
+        // Try to update existing file first, then create new file if it doesn't exist
+        let saveSuccess = updateFileContent(editor.path, filename, editor.content);
         if (!saveSuccess) {
-          // Try updating existing file
-          saveSuccess = updateFileContent(currentPath, filename, editor.content);
+          saveSuccess = createFile(editor.path, filename, editor.content);
         }
         
         if (saveSuccess) {
@@ -2720,7 +2835,7 @@ const Hero: React.FC = () => {
           setEditor(prev => ({ 
             ...prev, 
             mode: 'normal', 
-            message: `E13: File exists (add ! to override)` 
+            message: `E13: Permission denied writing "${filename}"` 
           }));
         }
       }
@@ -2749,9 +2864,11 @@ const Hero: React.FC = () => {
       mode: 'normal',
       cursorLine: 0,
       cursorCol: 0,
-      message: ''
+      message: '',
+      path: ['/']
     });
     
+    // Only add exit message if there is one, don't add a static prompt line
     if (message) {
       const newLines = [
         ...lines,
@@ -2759,6 +2876,10 @@ const Hero: React.FC = () => {
       ];
       setLines(newLines);
     }
+    
+    // Reset input state to ensure terminal is ready for next command
+    setCurrentInput('');
+    setCursorPosition(0);
   };
 
   return (
