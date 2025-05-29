@@ -2636,31 +2636,18 @@ const Hero: React.FC = () => {
                     {/* Show cursor only on current line */}
                     {isCurrentLine && (
                       <>
-                        {editor.mode === 'insert' ? (
-                          // Insert mode: thin line cursor - positioned higher to match ~ character spacing
-                          <span 
-                            className="absolute bg-green-400 animate-pulse"
-                            style={{ 
-                              left: `${editor.cursorCol * 0.6}em`,
-                              width: '2px',
-                              height: '1.2em',
-                              top: '0.1em' // Move cursor down slightly to match ~ character vertical centering
-                            }}
-                          />
-                        ) : (
-                          // Normal mode: block cursor - positioned higher to match ~ character spacing
-                          <span 
-                            className="absolute bg-green-400 text-black flex items-center justify-center"
-                            style={{ 
-                              left: `${editor.cursorCol * 0.6}em`,
-                              width: '0.6em',
-                              height: '1.2em',
-                              top: '0.1em' // Move cursor down slightly to match ~ character vertical centering
-                            }}
-                          >
-                            {line && line[editor.cursorCol] ? line[editor.cursorCol] : ' '}
-                          </span>
-                        )}
+                        {/* Always use block cursor in both normal and insert modes */}
+                        <span 
+                          className="absolute bg-green-400 text-black flex items-center justify-center animate-pulse"
+                          style={{ 
+                            left: `${editor.cursorCol * 0.6}em`,
+                            width: '0.6em',
+                            height: '1.2em',
+                            top: '0.1em' // Move cursor down slightly to match ~ character vertical centering
+                          }}
+                        >
+                          {line && line[editor.cursorCol] ? line[editor.cursorCol] : ' '}
+                        </span>
                       </>
                     )}
                   </span>
