@@ -1381,12 +1381,12 @@ const Hero: React.FC = () => {
         output.push('cd              - Change directory (supports absolute and relative paths)');
         output.push('cat             - Display file content');
         output.push('xdg-open        - Execute/open file (links, applications)');
+        output.push('open            - Open/view file (alias for xdg-open)');
         output.push('echo            - Display a line of text');
         output.push('clear           - Clear the terminal');
         output.push('whoami          - Display current user');
         output.push('date            - Display current date and time');
         output.push('pwd             - Print working directory');
-        output.push('open            - Open/view file (alias for xdg-open)');
         output.push('\n');
         output.push(<TerminalText textType="info" key="help-file-ops">File Operations:</TerminalText>);
         output.push('touch           - Create empty file');
