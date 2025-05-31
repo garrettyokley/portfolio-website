@@ -31,8 +31,8 @@ const generateResumeText = () => {
       // Windows - use the .exe from bin folder
       pdfToTextCommand = path.join(__dirname, 'bin', 'pdftotext.exe');
     } else {
-      // Linux/Unix - use system pdftotext (available on Vercel)
-      pdfToTextCommand = 'pdftotext';
+      // Linux/Unix - look for Linux binary in bin folder
+      pdfToTextCommand = path.join(__dirname, 'bin', 'pdftotext');
     }
 
     // Clean up any existing text file first to avoid conflicts
@@ -56,9 +56,9 @@ const generateResumeText = () => {
       return;
     }
     
-    // Check if pdftotext command exists (only for Windows .exe)
-    if (process.platform === 'win32' && !fs.existsSync(pdfToTextCommand)) {
-      reject(new Error(`pdftotext.exe not found: ${pdfToTextCommand}`));
+    // Check if pdftotext command exists
+    if (!fs.existsSync(pdfToTextCommand)) {
+      reject(new Error(`pdftotext binary not found: ${pdfToTextCommand}`));
       return;
     }
     
