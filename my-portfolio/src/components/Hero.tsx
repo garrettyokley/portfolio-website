@@ -1260,7 +1260,7 @@ const Hero: React.FC = () => {
     }
   };
 
-  const handleCommand = (command: string) => {
+  const handleCommand = async (command: string) => {
     const trimmedCommand = command.trim();
     if (trimmedCommand) {
       setCommandHistory(prev => [...prev, trimmedCommand]);
@@ -1269,11 +1269,11 @@ const Hero: React.FC = () => {
     
     // Check for && chained commands
     if (trimmedCommand.includes(' && ')) {
-      handleChainedCommands(trimmedCommand);
+      await handleChainedCommands(trimmedCommand);
       return;
     }
     
-    const result = executeCommandWithPath(trimmedCommand, currentPath);
+    const result = await executeCommandWithPath(trimmedCommand, currentPath);
     if (result.newPath) {
       setCurrentPath(result.newPath);
     }
@@ -1281,13 +1281,13 @@ const Hero: React.FC = () => {
 
   // Removed unused executeCommand function
 
-  const handleChainedCommands = (commandChain: string) => {
+  const handleChainedCommands = async (commandChain: string) => {
     const commands = commandChain.split(' && ').map(cmd => cmd.trim());
     let allOutput: React.ReactNode[] = [];
     let tempPath = [...currentPath]; // Track path changes locally
     
     for (let i = 0; i < commands.length; i++) {
-      const result = executeCommandWithPath(commands[i], tempPath, true); // silent mode for chained commands
+      const result = await executeCommandWithPath(commands[i], tempPath, true); // silent mode for chained commands
       
       if (result.output) {
         allOutput = allOutput.concat(result.output);
@@ -1321,7 +1321,7 @@ const Hero: React.FC = () => {
     setCursorPosition(0);
   };
 
-  const executeCommandWithPath = (command: string, pathContext: string[], silent: boolean = false, forceRoot?: boolean): { success: boolean; output: React.ReactNode[]; newPath?: string[] } => {
+  const executeCommandWithPath = async (command: string, pathContext: string[], silent: boolean = false, forceRoot?: boolean): Promise<{ success: boolean; output: React.ReactNode[]; newPath?: string[] }> => {
     // Handle aliases
     const aliasedCommand = command
       .replace(/^ll\b/, 'ls -alF')
@@ -1550,7 +1550,7 @@ const Hero: React.FC = () => {
         }
         break;
       case 'cat':
-                let filePath = args.join(' '); // Join args to handle quoted filenames
+        let filePath = args.join(' '); // Join args to handle quoted filenames
         if (!filePath) {
           output.push(<TerminalText textType="error" key="cat-missing">cat: missing operand</TerminalText>);
           success = false;
@@ -1561,6 +1561,24 @@ const Hero: React.FC = () => {
             (filePath.startsWith("'") && filePath.endsWith("'"))) {
           filePath = filePath.slice(1, -1);
         }
+        
+        // Special handling for Garrett Yokley.pdf - fetch from txt file
+        if (filePath === 'Garrett Yokley.pdf') {
+          try {
+            const response = await fetch('/Garrett Yokley.txt');
+            if (response.ok) {
+              const content = await response.text();
+              output.push(content);
+            } else {
+              output.push(<TerminalText textType="error" key="cat-fetch-error">cat: {filePath}: Unable to fetch resume content</TerminalText>);
+            }
+          } catch (error) {
+            output.push(<TerminalText textType="error" key="cat-network-error">cat: {filePath}: Network error while fetching content</TerminalText>);
+          }
+          break;
+        }
+        
+        // Regular cat functionality for all other files
         const currentDir2 = getCurrentDirectoryFromPath(pathContext);
         if (currentDir2.children && currentDir2.children[filePath] && currentDir2.children[filePath].type === 'file') {
           output.push(currentDir2.children[filePath].content || '');
@@ -2515,7 +2533,7 @@ const Hero: React.FC = () => {
     }
   };
 
-  const handleSudoPasswordInput = (e: KeyboardEvent) => {
+  const handleSudoPasswordInput = async (e: KeyboardEvent) => {
     if (e.key === 'Enter') {
       // Check if password is correct (only accept "Password")
       if (currentInput === 'Password') {
@@ -2545,7 +2563,7 @@ const Hero: React.FC = () => {
         // Execute with root privileges using stored values
         const wasRoot = isRoot;
         setIsRoot(true);
-        const sudoResult = executeCommandWithPath(commandToExecute, pathToUse, false, true);
+        const sudoResult = await executeCommandWithPath(commandToExecute, pathToUse, false, true);
         setIsRoot(wasRoot); // Restore original root status
         
         // Update path if changed

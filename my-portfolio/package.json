@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prebuild": "node scripts/generate-resume-text.js",
+    "predev": "node scripts/generate-resume-text.js",
+    "generate-resume": "node scripts/generate-resume-text.js"
   },
   "dependencies": {
     "framer-motion": "^12.12.1",
