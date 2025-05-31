@@ -1897,12 +1897,12 @@ const Hero: React.FC = () => {
               output.push(<span style={{ color: '#ff6666' }}>Deleting /lib... libraries? who needs 'em?</span>);
               output.push(<span style={{ color: '#ff6666' }}>Deleting /var... logs and caches vanish into the void</span>);
               output.push('');
-              output.push(<TerminalText textType="error" key="rm-destroyed">🔥 SYSTEM OBLITERATED 🔥</TerminalText>);
+              output.push(<TerminalText textType="error" key="rm-destroyed">SYSTEM OBLITERATED</TerminalText>);
               output.push('');
               output.push(<span style={{ color: '#ffff00' }}>Fun fact: This is why production servers have backups!</span>);
               output.push(<span style={{ color: '#ffff00' }}>Famous last words: "sudo rm -rf / --no-preserve-root"</span>);
               output.push('');
-              output.push(<span style={{ color: '#00ffff' }}>Don't worry, this is just a simulation. Your real computer is safe! 😅</span>);
+              output.push(<span style={{ color: '#00ffff' }}>Don't worry, this is just a simulation. Your real computer is safe!</span>);
               output.push(<span style={{ color: '#00ffff' }}>But seriously, never run this command on a real system.</span>);
               output.push('');
               output.push(<TerminalText textType="error" key="rm-final">Welcome to the digital wasteland. Population: 0</TerminalText>);
@@ -2919,10 +2919,7 @@ const Hero: React.FC = () => {
                 }}
               />
               <div className="mt-4 text-center">
-                <p className="text-red-500 font-mono text-xl mb-2 font-bold animate-pulse">SYSTEM OBLITERATED</p>
-                <p className="text-yellow-400 font-mono text-sm mb-1">Terry Davis watches over the digital wasteland</p>
-                <p className="text-blue-400 font-mono text-xs mb-1">TempleOS creator and legendary programmer</p>
-                <p className="text-gray-400 font-mono text-xs mt-3">Press F5 to restore from backup</p>
+                <p className="text-red-500 font-mono text-lg mb-2 font-bold">WHY DID YOU DO THAT!</p>
               </div>
             </div>
           </div>

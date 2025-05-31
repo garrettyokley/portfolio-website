@@ -22,7 +22,6 @@ const cleanText = (text) => {
 
 const generateResumeText = () => {
   return new Promise((resolve, reject) => {
-    const pythonScript = path.join(__dirname, 'pdftotext.py');
     const pdfPath = path.join(__dirname, '..', 'public', 'Garrett Yokley.pdf');
     const outputPath = path.join(__dirname, '..', 'public', 'Garrett Yokley.txt');
     const pdfToTextPath = path.join(__dirname, 'bin', 'pdftotext.exe');
@@ -54,27 +53,23 @@ const generateResumeText = () => {
       return;
     }
     
-    // Spawn Python process with the pdftotext path as third argument
-    const python = spawn('python', [pythonScript, pdfPath, outputPath, pdfToTextPath], {
+    // Run pdftotext.exe directly (same as Python script was doing)
+    const pdftotext = spawn(pdfToTextPath, [pdfPath, outputPath], {
       cwd: __dirname
     });
     
     let stdout = '';
     let stderr = '';
     
-    python.stdout.on('data', (data) => {
-      const output = data.toString();
-      stdout += output;
-      console.log(output.trim());
+    pdftotext.stdout.on('data', (data) => {
+      stdout += data.toString();
     });
     
-    python.stderr.on('data', (data) => {
-      const error = data.toString();
-      stderr += error;
-      console.error(error.trim());
+    pdftotext.stderr.on('data', (data) => {
+      stderr += data.toString();
     });
     
-    python.on('close', (code) => {
+    pdftotext.on('close', (code) => {
       if (code === 0) {
         // Verify the output file was created
         if (fs.existsSync(outputPath)) {
@@ -92,7 +87,7 @@ const generateResumeText = () => {
             const stats = fs.statSync(outputPath);
             console.log('Resume text extracted and cleaned successfully');
             console.log(`Final file size: ${stats.size} bytes`);
-            console.log(`Removed unknown characters and empty lines`);
+            console.log('Removed unknown characters and empty lines');
             resolve();
           } catch (cleanError) {
             reject(new Error(`Failed to clean text: ${cleanError.message}`));
@@ -101,13 +96,13 @@ const generateResumeText = () => {
           reject(new Error('Output file was not created'));
         }
       } else {
-        console.error('Python script failed');
-        reject(new Error(`Python script exited with code ${code}: ${stderr}`));
+        console.error('pdftotext failed');
+        reject(new Error(`pdftotext exited with code ${code}: ${stderr}`));
       }
     });
     
-    python.on('error', (error) => {
-      console.error('Failed to start Python process:', error.message);
+    pdftotext.on('error', (error) => {
+      console.error('Failed to start pdftotext process:', error.message);
       reject(error);
     });
   });
