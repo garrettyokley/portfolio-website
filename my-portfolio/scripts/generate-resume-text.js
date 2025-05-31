@@ -24,7 +24,16 @@ const generateResumeText = () => {
   return new Promise((resolve, reject) => {
     const pdfPath = path.join(__dirname, '..', 'public', 'Garrett Yokley.pdf');
     const outputPath = path.join(__dirname, '..', 'public', 'Garrett Yokley.txt');
-    const pdfToTextPath = path.join(__dirname, 'bin', 'pdftotext.exe');
+    
+    // Determine the correct pdftotext command based on platform
+    let pdfToTextCommand;
+    if (process.platform === 'win32') {
+      // Windows - use the .exe from bin folder
+      pdfToTextCommand = path.join(__dirname, 'bin', 'pdftotext.exe');
+    } else {
+      // Linux/Unix - use system pdftotext (available on Vercel)
+      pdfToTextCommand = 'pdftotext';
+    }
 
     // Clean up any existing text file first to avoid conflicts
     try {
@@ -39,7 +48,7 @@ const generateResumeText = () => {
     console.log('Extracting text from PDF...');
     console.log(`PDF: ${pdfPath}`);
     console.log(`Output: ${outputPath}`);
-    console.log(`Using: ${pdfToTextPath}`);
+    console.log(`Using: ${pdfToTextCommand}`);
     
     // Check if PDF exists
     if (!fs.existsSync(pdfPath)) {
@@ -47,14 +56,14 @@ const generateResumeText = () => {
       return;
     }
     
-    // Check if pdftotext.exe exists
-    if (!fs.existsSync(pdfToTextPath)) {
-      reject(new Error(`pdftotext.exe not found: ${pdfToTextPath}`));
+    // Check if pdftotext command exists (only for Windows .exe)
+    if (process.platform === 'win32' && !fs.existsSync(pdfToTextCommand)) {
+      reject(new Error(`pdftotext.exe not found: ${pdfToTextCommand}`));
       return;
     }
     
-    // Run pdftotext.exe directly (same as Python script was doing)
-    const pdftotext = spawn(pdfToTextPath, [pdfPath, outputPath], {
+    // Run pdftotext command
+    const pdftotext = spawn(pdfToTextCommand, [pdfPath, outputPath], {
       cwd: __dirname
     });
     
