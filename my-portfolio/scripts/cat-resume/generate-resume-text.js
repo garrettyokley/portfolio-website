@@ -31,8 +31,18 @@ const generateResumeText = () => {
       // Windows - use the .exe from windows folder
       pdfToTextCommand = path.join(__dirname, 'windows', 'pdftotext.exe');
     } else {
-      // Linux/Unix - look for Linux binary in linux folder
-      pdfToTextCommand = path.join(__dirname, 'linux', 'pdftotext');
+      // Linux/Unix - try system pdftotext first, then fall back to our binary
+      pdfToTextCommand = 'pdftotext'; // Try system PATH first
+      
+      // Check if system pdftotext exists
+      try {
+        execSync('which pdftotext', { stdio: 'pipe' });
+        console.log('Using system pdftotext from PATH');
+      } catch (error) {
+        // System pdftotext not found, use our binary
+        pdfToTextCommand = path.join(__dirname, 'linux', 'pdftotext');
+        console.log('System pdftotext not found, using custom binary');
+      }
     }
 
     // Clean up any existing text file first to avoid conflicts
@@ -56,34 +66,21 @@ const generateResumeText = () => {
       return;
     }
     
-    // Check if pdftotext command exists
-    if (!fs.existsSync(pdfToTextCommand)) {
-      reject(new Error(`pdftotext binary not found: ${pdfToTextCommand}`));
-      return;
-    }
-    
-    // Set execute permissions on the binary (Git doesn't preserve them)
-    try {
-      fs.chmodSync(pdfToTextCommand, '755');
-      console.log('Set execute permissions on pdftotext binary');
-    } catch (chmodError) {
-      console.warn('Could not set execute permissions:', chmodError.message);
-      // Continue anyway - might still work
-    }
-    
-    // On Linux, try to install poppler-utils to ensure dependencies are available
-    if (process.platform !== 'win32') {
+    // Only check file existence and set permissions for local binaries (not system commands)
+    if (pdfToTextCommand !== 'pdftotext') {
+      // Check if pdftotext command exists
+      if (!fs.existsSync(pdfToTextCommand)) {
+        reject(new Error(`pdftotext binary not found: ${pdfToTextCommand}`));
+        return;
+      }
+      
+      // Set execute permissions on the binary (Git doesn't preserve them)
       try {
-        console.log('Attempting to install poppler-utils dependencies...');
-        execSync('apt-get update && apt-get install -y poppler-utils', { 
-          stdio: 'inherit',
-          timeout: 60000 // 60 second timeout
-        });
-        console.log('Successfully installed poppler-utils');
-      } catch (installError) {
-        console.warn('Could not install poppler-utils:', installError.message);
-        console.warn('Proceeding with existing binary anyway...');
-        // Continue anyway - our binary might still work
+        fs.chmodSync(pdfToTextCommand, '755');
+        console.log('Set execute permissions on pdftotext binary');
+      } catch (chmodError) {
+        console.warn('Could not set execute permissions:', chmodError.message);
+        // Continue anyway - might still work
       }
     }
     
