@@ -62,6 +62,15 @@ const generateResumeText = () => {
       return;
     }
     
+    // Set execute permissions on the binary (Git doesn't preserve them)
+    try {
+      fs.chmodSync(pdfToTextCommand, '755');
+      console.log('Set execute permissions on pdftotext binary');
+    } catch (chmodError) {
+      console.warn('Could not set execute permissions:', chmodError.message);
+      // Continue anyway - might still work
+    }
+    
     // Run pdftotext command
     const pdftotext = spawn(pdfToTextCommand, [pdfPath, outputPath], {
       cwd: __dirname
