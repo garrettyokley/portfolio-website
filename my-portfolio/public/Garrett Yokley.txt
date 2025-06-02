@@ -1,0 +1,39 @@
+Garrett Yokley Systems Administrator
+(678) 523-6062 garrettyokley@protonmail.com http://www.linkedin.com/in/garrettyokley
+Systems Administrator skilled in securing hybrid infrastructure and automating critical processes,
+passionate about exploring AI-driven solutions and machine learning.
+CERTIFICATIONS
+Security+, CompTIA
+Linux+, CompTIA (Scheduled 06/2025)
+Linux Essentials (LPI-1), Linux Professional Institute (Scheduled 06/2025)
+ITIL4, Information Technology Infrastructure Library
+CCNA, Cisco (Scheduled 07/2025)
+WORK EXPERIENCE
+Docufree Corporation - 09/2023 - Present
+Administer Windows Server, Linux, and FreeBSD systems, managing DNS, Active Directory,
+Microsoft 365, and Exchange Online for large-scale infrastructure.
+Manage virtualization and security operations, including VMware ESXi, Hyper-V clustering, Veeam
+backups, Linux vulnerability management, and FortiGate rewall maintenance.
+Partner with development to deploy and troubleshoot IIS web services and Android applications.
+Compiled OpenSSH from source to patch a critical CVE on an Ubuntu proxy server.
+Deployed a FOG Project imaging server, automating workstation and server deployments and
+eliminating manual build processes.
+Deployed TinyProxy and Squid proxy servers and congured E2Guardian for web content ltering
+in a secured production environment.
+Automated app deployments using PDQ Deploy and PowerShell, streamlining environment
+standardization and eliminating hours of manual conguration.
+Reverse-engineered and rebuilt undocumented scanning workows, integrating SMB shares on
+TrueNAS, retiring a legacy Windows Server 2008 le server, and averting a company-wide
+production outage and large-scale data loss.
+Assisted in the end-to-end deployment of an enterprise-grade FortiGate rewall, working as
+remote hands to congure and bring the device online from its initial state.
+Explored Azure AI and Azure ML under senior developer guidance, applying statistical techniques
+like condence intervals.
+EDUCATION
+Bachelor of Science in Computer Science - Western Governors University (Graduating 09/25)
+SKILLS
+Skills: Entra ID Ubuntu Debian RedHat Vim DFS Cisco IOS and device cong OpenSSH
+DNS FTP/SFTP SMB Rapid7 vulnerability management Bash Git GitHub GitLab
+Familiar with: FortiGate Firewall Cong REST APIs Python Java Node.js Node.js Angular
+NFS ZFS Bootstrap Azure AI Hibernate Spring Data JPA Excel Macros & Visual Basic
+MySQL Microsoft SSMS Load balancers

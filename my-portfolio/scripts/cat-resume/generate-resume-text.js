@@ -22,17 +22,17 @@ const cleanText = (text) => {
 
 const generateResumeText = () => {
   return new Promise((resolve, reject) => {
-    const pdfPath = path.join(__dirname, '..', 'public', 'Garrett Yokley.pdf');
-    const outputPath = path.join(__dirname, '..', 'public', 'Garrett Yokley.txt');
+    const pdfPath = path.join(__dirname, '..', '..', 'public', 'Garrett Yokley.pdf');
+    const outputPath = path.join(__dirname, '..', '..', 'public', 'Garrett Yokley.txt');
     
     // Determine the correct pdftotext command based on platform
     let pdfToTextCommand;
     if (process.platform === 'win32') {
-      // Windows - use the .exe from bin folder
-      pdfToTextCommand = path.join(__dirname, 'bin', 'pdftotext.exe');
+      // Windows - use the .exe from windows folder
+      pdfToTextCommand = path.join(__dirname, 'windows', 'pdftotext.exe');
     } else {
-      // Linux/Unix - look for Linux binary in bin folder
-      pdfToTextCommand = path.join(__dirname, 'bin', 'pdftotext');
+      // Linux/Unix - look for Linux binary in linux folder
+      pdfToTextCommand = path.join(__dirname, 'linux', 'pdftotext');
     }
 
     // Clean up any existing text file first to avoid conflicts
