@@ -1,6 +1,6 @@
-const { spawn, execSync } = require('child_process');
-const path = require('path');
 const fs = require('fs');
+const path = require('path');
+const pdf = require('pdf-parse');
 
 const cleanText = (text) => {
   return text
@@ -25,26 +25,16 @@ const generateResumeText = () => {
     const pdfPath = path.join(__dirname, '..', '..', 'public', 'Garrett Yokley.pdf');
     const outputPath = path.join(__dirname, '..', '..', 'public', 'Garrett Yokley.txt');
     
-    // Determine the correct pdftotext command based on platform
-    let pdfToTextCommand;
-    if (process.platform === 'win32') {
-      // Windows - use the .exe from windows folder
-      pdfToTextCommand = path.join(__dirname, 'windows', 'pdftotext.exe');
-    } else {
-      // Linux/Unix - try system pdftotext first, then fall back to our binary
-      pdfToTextCommand = 'pdftotext'; // Try system PATH first
-      
-      // Check if system pdftotext exists
-      try {
-        execSync('which pdftotext', { stdio: 'pipe' });
-        console.log('Using system pdftotext from PATH');
-      } catch (error) {
-        // System pdftotext not found, use our binary
-        pdfToTextCommand = path.join(__dirname, 'linux', 'pdftotext');
-        console.log('System pdftotext not found, using custom binary');
-      }
+    console.log('Extracting text from PDF using Node.js...');
+    console.log(`PDF: ${pdfPath}`);
+    console.log(`Output: ${outputPath}`);
+    
+    // Check if PDF exists
+    if (!fs.existsSync(pdfPath)) {
+      reject(new Error(`PDF file not found: ${pdfPath}`));
+      return;
     }
-
+    
     // Clean up any existing text file first to avoid conflicts
     try {
       if (fs.existsSync(outputPath)) {
@@ -54,87 +44,39 @@ const generateResumeText = () => {
     } catch (error) {
       console.warn('Could not remove existing text file:', error.message);
     }
-
-    console.log('Extracting text from PDF...');
-    console.log(`PDF: ${pdfPath}`);
-    console.log(`Output: ${outputPath}`);
-    console.log(`Using: ${pdfToTextCommand}`);
     
-    // Check if PDF exists
-    if (!fs.existsSync(pdfPath)) {
-      reject(new Error(`PDF file not found: ${pdfPath}`));
-      return;
-    }
-    
-    // Only check file existence and set permissions for local binaries (not system commands)
-    if (pdfToTextCommand !== 'pdftotext') {
-      // Check if pdftotext command exists
-      if (!fs.existsSync(pdfToTextCommand)) {
-        reject(new Error(`pdftotext binary not found: ${pdfToTextCommand}`));
+    // Read PDF file as buffer
+    fs.readFile(pdfPath, (err, dataBuffer) => {
+      if (err) {
+        reject(new Error(`Failed to read PDF file: ${err.message}`));
         return;
       }
       
-      // Set execute permissions on the binary (Git doesn't preserve them)
-      try {
-        fs.chmodSync(pdfToTextCommand, '755');
-        console.log('Set execute permissions on pdftotext binary');
-      } catch (chmodError) {
-        console.warn('Could not set execute permissions:', chmodError.message);
-        // Continue anyway - might still work
-      }
-    }
-    
-    // Run pdftotext command
-    const pdftotext = spawn(pdfToTextCommand, [pdfPath, outputPath], {
-      cwd: __dirname
-    });
-    
-    let stdout = '';
-    let stderr = '';
-    
-    pdftotext.stdout.on('data', (data) => {
-      stdout += data.toString();
-    });
-    
-    pdftotext.stderr.on('data', (data) => {
-      stderr += data.toString();
-    });
-    
-    pdftotext.on('close', (code) => {
-      if (code === 0) {
-        // Verify the output file was created
-        if (fs.existsSync(outputPath)) {
+      // Parse PDF using pdf-parse
+      pdf(dataBuffer)
+        .then((data) => {
           try {
-            // Read the generated text file
-            const rawText = fs.readFileSync(outputPath, 'utf8');
             console.log('Cleaning extracted text...');
             
-            // Clean the text
-            const cleanedText = cleanText(rawText);
+            // Clean the extracted text
+            const cleanedText = cleanText(data.text);
             
-            // Write the cleaned text back to the file
+            // Write the cleaned text to file
             fs.writeFileSync(outputPath, cleanedText, 'utf8');
             
             const stats = fs.statSync(outputPath);
             console.log('Resume text extracted and cleaned successfully');
             console.log(`Final file size: ${stats.size} bytes`);
+            console.log(`Extracted ${data.numpages} pages`);
             console.log('Removed unknown characters and empty lines');
             resolve();
           } catch (cleanError) {
-            reject(new Error(`Failed to clean text: ${cleanError.message}`));
+            reject(new Error(`Failed to clean and save text: ${cleanError.message}`));
           }
-        } else {
-          reject(new Error('Output file was not created'));
-        }
-      } else {
-        console.error('pdftotext failed');
-        reject(new Error(`pdftotext exited with code ${code}: ${stderr}`));
-      }
-    });
-    
-    pdftotext.on('error', (error) => {
-      console.error('Failed to start pdftotext process:', error.message);
-      reject(error);
+        })
+        .catch((parseError) => {
+          reject(new Error(`Failed to parse PDF: ${parseError.message}`));
+        });
     });
   });
 };
