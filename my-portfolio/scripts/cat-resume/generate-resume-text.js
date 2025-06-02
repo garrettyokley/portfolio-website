@@ -1,4 +1,4 @@
-const { spawn } = require('child_process');
+const { spawn, execSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
@@ -69,6 +69,22 @@ const generateResumeText = () => {
     } catch (chmodError) {
       console.warn('Could not set execute permissions:', chmodError.message);
       // Continue anyway - might still work
+    }
+    
+    // On Linux, try to install poppler-utils to ensure dependencies are available
+    if (process.platform !== 'win32') {
+      try {
+        console.log('Attempting to install poppler-utils dependencies...');
+        execSync('apt-get update && apt-get install -y poppler-utils', { 
+          stdio: 'inherit',
+          timeout: 60000 // 60 second timeout
+        });
+        console.log('Successfully installed poppler-utils');
+      } catch (installError) {
+        console.warn('Could not install poppler-utils:', installError.message);
+        console.warn('Proceeding with existing binary anyway...');
+        // Continue anyway - our binary might still work
+      }
     }
     
     // Run pdftotext command
