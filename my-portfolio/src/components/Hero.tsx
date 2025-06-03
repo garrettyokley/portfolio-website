@@ -156,7 +156,7 @@ const initialFileSystem: Directory = {
         'motd': { type: 'file', content: `I started working in IT nearly two years ago. The plan was to pivot into software development once I had built a strong foundation.
 I\'ve had some exposure to development, including brief work training Azure AI models, but the bulk of my experience has focused on systems administration, automation, and security, learning whatever was required to keep things running.
 At a smaller company, I\'ve had the freedom to take initiative. Frustrated by repetitive tasks, I began building automation for deployments, workstation and server builds, vulnerability scanning, and patching. That turned into a growing interest in DevOps and systems engineering. But I\'m not fixed on one path. I try to stay curious, stay on top of emerging technologies, and build things that solve real problems.
-I\'ve now built that strong foundation, and I\'m now setting out to prove it through certifications and personal projects.
+I\'ve now built that strong foundation, and I\'m now setting out to prove it through certifications and personal projects.\n
 Try cat README.md`, permissions: '-rw-r--r--', owner: 'root', group: 'root' },
         'hosts': { type: 'file', content: '127.0.0.1\tlocalhost\n127.0.1.1\tportfolio-site\n::1\t\tlocalhost ip6-localhost ip6-loopback', permissions: '-rw-r--r--', owner: 'root', group: 'root' },
         'hostname': { type: 'file', content: 'portfolio-site', permissions: '-rw-r--r--', owner: 'root', group: 'root' },
@@ -199,13 +199,10 @@ Try cat README.md`, permissions: '-rw-r--r--', owner: 'root', group: 'root' },
           children: {
             'README.md': {
               type: 'file',
-              content: `This is an interactive Ubuntu terminal. It's mostly vibe coded, but I think it's pretty cool. 
-I will continue to build out real Linux functionality, but eventually I plan to use the concept to build a real site, host it on my own server, and handle traffic from users that want to use what I've built. 
-This will of course require actual security and therefore a deeper understanding of the code.
-For now, it's just a fun project to play with and will be the home of all of my projects and certifications.\n
+              content: `This is an interactive Ubuntu terminal. It will serve as the home of all of my future projects and certifications.\n
 Use help to see what functionality is available.
 Try opening my resume with 'cat ~/Documents/Garrett Yokley.pdf or 'xdg-open ~/Documents/Garrett Yokley.pdf'
-Try launching a certification with 'xdg-open ~/Documents/Certs/Security+, CompTIA.pdf'
+Try launching a certification PDF with 'xdg-open ~/Documents/Certs/Security+, CompTIA.pdf'
 Try bricking your system by running 'sudo rm -rf / --no-preserve-root' (Password:Password)`,
               permissions: '-rw-r--r--',
               owner: 'garrettyokley',
@@ -226,11 +223,12 @@ Try bricking your system by running 'sudo rm -rf / --no-preserve-root' (Password
                   owner: 'garrettyokley',
                   group: 'garrettyokley',
                   children: {
-                    'Security+, CompTIA.pdf': { type: 'file', content: 'CompTIA Security+ Certification\n\nCertification Details:\nIssued by: CompTIA\nCertification ID: [ID]\nValid until: [Date]', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
-                    'Linux+, CompTIA.pdf': { type: 'file', content: 'CompTIA Linux+ Certification\n\nCertification Details:\nIssued by: CompTIA\nCertification ID: [ID]\nValid until: [Date]', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
-                    'Linux Essentials (LPI-1), Linux Professional Institute.pdf': { type: 'file', content: 'Linux Professional Institute - Linux Essentials\n\nCertification Details:\nIssued by: Linux Professional Institute\nCertification ID: [ID]\nValid until: [Date]', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
-                    'ITIL4, Information Technology Infrastructure Library.pdf': { type: 'file', content: 'ITIL 4 Foundation Certification\n\nCertification Details:\nIssued by: AXELOS\nCertification ID: [ID]\nValid until: [Date]', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
-                    'CCNA, Cisco.pdf': { type: 'file', content: 'Cisco Certified Network Associate (CCNA)\n\nCertification Details:\nIssued by: Cisco\nCertification ID: [ID]\nValid until: [Date]', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' }
+                    'Security+, CompTIA.pdf': { type: 'file', content: 'CompTIA Security+ Certification\n\nCertification Details:\nIssued by: CompTIA\nCertification ID: [Completed]\nValid until: [Active]', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
+                    'Linux+, CompTIA.pdf': { type: 'file', content: 'CompTIA Linux+ Certification\n\nStatus: Coming June 7, 2025\n\nThis certification validates advanced Linux administration skills and knowledge.', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
+                    'Linux Essentials (LPI-1), Linux Professional Institute.pdf': { type: 'file', content: 'Linux Professional Institute - Linux Essentials\n\nStatus: Coming June 28, 2025\n\nFoundational certification covering Linux basics and essential skills.', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
+                    'ITIL4, Information Technology Infrastructure Library.pdf': { type: 'file', content: 'ITIL 4 Foundation Certification\n\nCertification Details:\nIssued by: AXELOS\nCertification ID: [Completed]\nValid until: [Active]', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
+                    'CCNA, Cisco.pdf': { type: 'file', content: 'Cisco Certified Network Associate (CCNA)\n\nStatus: Coming July 12, 2025\n\nCertification covering networking fundamentals, routing, switching, and network security.', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
+                    'RHCSA, Red Hat.pdf': { type: 'file', content: 'Red Hat Certified System Administrator (RHCSA)\n\nStatus: Coming 2025\n\nHands-on certification demonstrating practical Linux system administration skills on Red Hat Enterprise Linux.', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' }
                   }
                 },
                 'Projects': {
@@ -239,10 +237,16 @@ Try bricking your system by running 'sudo rm -rf / --no-preserve-root' (Password
                   owner: 'garrettyokley',
                   group: 'garrettyokley',
                   children: {
-                    'Portfolio Website': { type: 'file', content: '#!/usr/bin/env xdg-open\n# Portfolio Website Project\nURL=http://localhost:3000/projects/portfolio', permissions: '-rwxr-xr-x', owner: 'garrettyokley', group: 'garrettyokley' },
-                    'Chess Game': { type: 'file', content: '#!/usr/bin/env xdg-open\n# Chess Game Project\nURL=http://localhost:3000/projects/chess', permissions: '-rwxr-xr-x', owner: 'garrettyokley', group: 'garrettyokley' },
-                    'Machine Learning Dashboard': { type: 'file', content: '#!/usr/bin/env xdg-open\n# ML Dashboard Project\nURL=http://localhost:3000/projects/ml-dashboard', permissions: '-rwxr-xr-x', owner: 'garrettyokley', group: 'garrettyokley' },
-                    'Blockchain Explorer': { type: 'file', content: '#!/usr/bin/env xdg-open\n# Blockchain Explorer Project\nURL=http://localhost:3000/projects/blockchain', permissions: '-rwxr-xr-x', owner: 'garrettyokley', group: 'garrettyokley' }
+                    'Chess Game': { type: 'file', content: '#!/usr/bin/env xdg-open\n# Interactive Chess Game\nURL=/chess.html', permissions: '-rwxr-xr-x', owner: 'garrettyokley', group: 'garrettyokley' }
+                  }
+                },
+                'Education': {
+                  type: 'dir',
+                  permissions: 'drwxr-xr-x',
+                  owner: 'garrettyokley',
+                  group: 'garrettyokley',
+                  children: {
+                    'Bachelor of Science in Computer Science, WGU.pdf': { type: 'file', content: 'Bachelor of Science in Computer Science\nWestern Governors University\n\nStatus: Coming September 2025\n\nCompetency-based degree program covering software development, algorithms, data structures, database design, and computer science fundamentals.', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' }
                   }
                 },
                 'Links': {
@@ -291,55 +295,6 @@ SKILLS
             'Videos': { type: 'dir', permissions: 'drwxr-xr-x', owner: 'garrettyokley', group: 'garrettyokley', children: {} },
             'Public': { type: 'dir', permissions: 'drwxr-xr-x', owner: 'garrettyokley', group: 'garrettyokley', children: {} },
             'Templates': { type: 'dir', permissions: 'drwxr-xr-x', owner: 'garrettyokley', group: 'garrettyokley', children: {} },
-            'projects': {
-              type: 'dir',
-              permissions: 'drwxr-xr-x',
-              owner: 'garrettyokley',
-              group: 'garrettyokley',
-              children: {
-                'Play Chess': { type: 'file', content: '#!/usr/bin/env xdg-open\n# Interactive Chess Game\nURL=/chess.html', permissions: '-rwxr-xr-x', owner: 'garrettyokley', group: 'garrettyokley' },
-                'portfolio-website': { 
-                  type: 'dir',
-                  permissions: 'drwxr-xr-x',
-                  owner: 'garrettyokley',
-                  group: 'garrettyokley',
-                  children: {
-                    'src': { type: 'dir', permissions: 'drwxr-xr-x', owner: 'garrettyokley', group: 'garrettyokley', children: {} },
-                    'package.json': { type: 'file', content: '{\n  "name": "portfolio",\n  "version": "1.0.0"\n}', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
-                    '.git': { type: 'dir', permissions: 'drwxr-xr-x', owner: 'garrettyokley', group: 'garrettyokley', children: {} },
-                    '.gitignore': { type: 'file', content: 'node_modules/\n.env\ndist/', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' }
-                  } 
-                },
-                'chess-game': { 
-                  type: 'dir',
-                  permissions: 'drwxr-xr-x',
-                  owner: 'garrettyokley',
-                  group: 'garrettyokley',
-                  children: {
-                    'main.py': { type: 'file', content: '# Chess game implementation\nprint("Welcome to Chess!")', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
-                    '.env': { type: 'file', content: 'DEBUG=true', permissions: '-rw-------', owner: 'garrettyokley', group: 'garrettyokley' }
-                  } 
-                },
-                'ml-dashboard': {
-                  type: 'dir',
-                  permissions: 'drwxr-xr-x',
-                  owner: 'garrettyokley',
-                  group: 'garrettyokley',
-                  children: {
-                    'README.md': { type: 'file', content: '# Machine Learning Dashboard\n\nReal-time ML model monitoring and visualization.', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' }
-                  }
-                },
-                'blockchain-explorer': {
-                  type: 'dir',
-                  permissions: 'drwxr-xr-x',
-                  owner: 'garrettyokley',
-                  group: 'garrettyokley',
-                  children: {
-                    'README.md': { type: 'file', content: '# Blockchain Explorer\n\nExplore blockchain transactions and smart contracts.', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' }
-                  }
-                }
-              }
-            },
             '.bash_logout': { type: 'file', content: '# ~/.bash_logout: executed by bash(1) when login shell exits.\n\n# Clear the console when logging out\nif [ "$SHLVL" = 1 ]; then\n    [ -x /usr/bin/clear_console ] && /usr/bin/clear_console -q\nfi', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
             '.bashrc': { type: 'file', content: '# ~/.bashrc: executed by bash(1) for non-login shells.\n\n# If not running interactively, don\'t do anything\ncase $- in\n    *i*) ;;\n      *) return;;\nesac\n\n# Make less more friendly for non-text input files\n[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"\n\n# Set variable identifying the chroot you work in\nif [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then\n    debian_chroot=$(cat /etc/debian_chroot)\nfi\n\nPS1="[\\u@\\h \\W]\\$ "\n\nalias ll=\'ls -alF\'\nalias la=\'ls -A\'\nalias l=\'ls -CF\'', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
             '.profile': { type: 'file', content: '# ~/.profile: executed by the command interpreter for login shells.\n\n# If running bash\nif [ -n "$BASH_VERSION" ]; then\n    # Include .bashrc if it exists\n    if [ -f "$HOME/.bashrc" ]; then\n        . "$HOME/.bashrc"\n    fi\nfi\n\n# Set PATH so it includes user\'s private bin if it exists\nif [ -d "$HOME/bin" ] ; then\n    PATH="$HOME/bin:$PATH"\nfi\n\n# Set PATH so it includes user\'s private bin if it exists\nif [ -d "$HOME/.local/bin" ] ; then\n    PATH="$HOME/.local/bin:$PATH"\nfi', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
@@ -626,13 +581,45 @@ const TerminalInput: React.FC<{
 
 const Hero: React.FC = () => {
   const [currentPath, setCurrentPath] = useState<string[]>(['/', 'home', 'garrettyokley']);
-  const [lines, setLines] = useState<React.ReactNode[]>([]);
+  
+  // For initial server render, use a placeholder for the dynamic part.
+  const initialWelcomeTextWithPlaceholder = `Welcome to my portfolio website!\nThis is an interactive Ubuntu terminal\nType 'help' for a list of available commands.\nLast login: [timestamp placeholder]`;
+
+  const [username, setUsername] = useState('garrettyokley');
+  const [isRoot, setIsRoot] = useState(false);
+
+  const getPrompt = () => {
+    let pathDisplay;
+    if (currentPath.length === 1 && currentPath[0] === '/') {
+      pathDisplay = '/';
+    } else {
+      const pathSegments = currentPath.slice(1); 
+      pathDisplay = '/' + pathSegments.join('/');
+    }
+    const shortPath = pathDisplay.replace(`/home/${username}`, '~');
+    const currentUser = isRoot ? 'root' : username;
+    const hostname = 'portfolio-site';
+    return `${currentUser}@${hostname}:${shortPath}$ `;
+  };
+
+  const [lines, setLines] = useState<React.ReactNode[]>(() => {
+    const motdContent = initialFileSystem.children?.etc?.children?.motd?.content || '';
+    const currentPromptText = getPrompt(); 
+
+    return [
+      // Use the version with the placeholder for initial render
+      <React.Fragment key="welcome">{initialWelcomeTextWithPlaceholder}</React.Fragment>,
+      <div key="motd-prompt" className="font-mono mb-1 flex items-center">
+        {renderPrompt(currentPromptText)}
+        <span style={{ color: 'white' }}>cat /etc/motd</span>
+      </div>,
+      <TerminalText key="motd-content" isOutput>{motdContent}</TerminalText>,
+    ];
+  });
   const [currentInput, setCurrentInput] = useState('');
   const [cursorPosition, setCursorPosition] = useState(0);
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
-  const [username, setUsername] = useState('garrettyokley');
-  const [isRoot, setIsRoot] = useState(false);
   const [fileSystem, setFileSystem] = useState<Directory>(initialFileSystem);
   const [editor, setEditor] = useState<EditorState>({
     isOpen: false,
@@ -660,8 +647,29 @@ const Hero: React.FC = () => {
   
   const terminalEndRef = useRef<HTMLDivElement>(null);
 
+  // useEffect to update the welcome message with client-side date/time after hydration
   useEffect(() => {
-    terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const loginTime = new Date().toLocaleTimeString();
+    const loginDate = new Date().toLocaleDateString();
+    // Construct the full dynamic message
+    const dynamicWelcomeMessage = `Welcome to my portfolio website!\nThis is an interactive Ubuntu terminal\nType 'help' for a list of available commands.\nLast login: ${loginTime} on ${loginDate}`;
+
+    setLines(prevLines => {
+      const newLines = [...prevLines];
+      // Find the welcome message React Fragment and update its children
+      const welcomeIndex = newLines.findIndex(
+        line => React.isValidElement(line) && line.key === "welcome"
+      );
+      if (welcomeIndex !== -1) {
+        newLines[welcomeIndex] = <React.Fragment key="welcome">{dynamicWelcomeMessage}</React.Fragment>;
+      }
+      return newLines;
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run once on mount (client-side only)
+
+  useEffect(() => {
+    terminalEndRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
   }, [lines]);
 
   // File system modification functions
@@ -1009,38 +1017,6 @@ const Hero: React.FC = () => {
       </div>
     );
   };
-
-  const getPrompt = () => {
-    // Fix path display to avoid double slashes
-    let pathDisplay;
-    if (currentPath.length === 1 && currentPath[0] === '/') {
-      pathDisplay = '/';
-    } else {
-      // Join path segments, but handle the leading slash properly
-      const pathSegments = currentPath.slice(1); // Remove the leading '/' 
-      pathDisplay = '/' + pathSegments.join('/');
-    }
-    
-    const shortPath = pathDisplay.replace(`/home/${username}`, '~');
-    const currentUser = isRoot ? 'root' : username;
-    const hostname = 'portfolio-site';
-    return `${currentUser}@${hostname}:${shortPath}$ `;
-  };
-
-  const initialWelcomeMessage = `Welcome to my portfolio website!\nThis is an interactive Ubuntu terminal\nType 'help' for a list of available commands.\nLast login: ${new Date().toLocaleTimeString()} on ${new Date().toLocaleDateString()}`;
-
-  useEffect(() => {
-    const motdContent = fileSystem.children?.etc?.children?.motd?.content || '';
-    setLines([
-      <React.Fragment key="welcome">{initialWelcomeMessage}</React.Fragment>,
-      <div key="motd-prompt" className="font-mono mb-1 flex items-center">
-        {renderPrompt(getPrompt())}
-        <span style={{ color: 'white' }}>cat /etc/motd</span>
-      </div>,
-      <TerminalText key="motd-content" isOutput>{motdContent}</TerminalText>,
-    ]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); 
 
   useEffect(() => {
     terminalEndRef.current?.scrollIntoView({ behavior: "auto", block: "end" });
@@ -1675,30 +1651,37 @@ const Hero: React.FC = () => {
       case 'certs':
         output.push('Professional Certifications:');
         output.push('');
-        output.push('Available certification PDFs:');
+        output.push('Completed:');
         output.push('  - Security+, CompTIA.pdf');
-        output.push('  - Linux+, CompTIA.pdf');
-        output.push('  - Linux Essentials (LPI-1), Linux Professional Institute.pdf');
         output.push('  - ITIL4, Information Technology Infrastructure Library.pdf');
-        output.push('  - CCNA, Cisco.pdf');
+        output.push('');
+        output.push('Coming in 2025:');
+        output.push('  - Linux+, CompTIA.pdf (June 7, 2025)');
+        output.push('  - Linux Essentials (LPI-1), Linux Professional Institute.pdf (June 28, 2025)');
+        output.push('  - CCNA, Cisco.pdf (July 12, 2025)');
+        output.push('  - RHCSA, Red Hat.pdf (2025)');
         output.push('');
         output.push('Navigate to: cd ~/Documents/Certs');
         output.push('Open PDFs with: xdg-open "Security+, CompTIA.pdf"');
         break;
       case 'projects':
-        output.push('Opening Projects...');
-        output.push('');
         output.push('Featured Projects:');
-        output.push('  Play Chess         - Interactive chess game (try: xdg-open "Play Chess")');
-        output.push('  portfolio-website/ - This interactive terminal portfolio');
-        output.push('  chess-game/        - AI-powered chess game');
-        output.push('  ml-dashboard/      - Machine learning dashboard');
-        output.push('  blockchain-explorer/ - Blockchain explorer tool');
         output.push('');
-        output.push('Click the "Projects" button in the navigation bar to view all projects.');
+        output.push('Available in ~/Documents/Projects:');
+        output.push('  Chess Game         - Interactive chess game (try: xdg-open "Chess Game")');
         output.push('');
-        output.push('You can also explore the projects/ directory:');
-        output.push('   cd projects && ls -la');
+        output.push('This interactive terminal is itself a featured project!');
+        output.push('Navigate to: cd ~/Documents/Projects');
+        output.push('Explore with: ls -la');
+        break;
+      case 'education':
+        output.push('Education:');
+        output.push('');
+        output.push('Coming September 2025:');
+        output.push('  Bachelor of Science in Computer Science - Western Governors University');
+        output.push('');
+        output.push('Navigate to: cd ~/Documents/Education');
+        output.push('View details: xdg-open "Bachelor of Science in Computer Science, WGU.pdf"');
         break;
       case 'links':
         output.push('Opening Links...');
