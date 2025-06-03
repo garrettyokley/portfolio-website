@@ -32,7 +32,7 @@ const Navbar: React.FC = () => {
         </Link>
         <div className="space-x-4 flex items-center">
           {/* Resume Button */}
-          <Link href="/Garrett Yokley.pdf" target="_blank" className="hover:text-cyan-300 transition-colors">
+          <Link href="/resume/Garrett Yokley.pdf" target="_blank" className="hover:text-cyan-300 transition-colors">
             Resume
           </Link>
 
@@ -43,7 +43,7 @@ const Navbar: React.FC = () => {
             </button>
             {certsOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-black border border-[#00ffff] rounded-md py-1 z-50">
-                <Link href="/Security+, CompTIA.pdf" target="_blank" onClick={() => setCertsOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">Security+</Link>
+                <Link href="/Security%2B%2C%20CompTIA.pdf" target="_blank" onClick={() => setCertsOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">Security+</Link>
                 <Link href="/linux-plus-comptia" onClick={() => setCertsOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">Linux+</Link>
                 <Link href="/linux-essentials-lpi" onClick={() => setCertsOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">Linux Essentials</Link>
                 <Link href="/ITIL4, Information Technology Infrastructure Library.pdf" target="_blank" onClick={() => setCertsOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">ITIL4</Link>

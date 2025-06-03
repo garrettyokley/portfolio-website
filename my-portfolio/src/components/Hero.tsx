@@ -201,7 +201,7 @@ Try cat README.md`, permissions: '-rw-r--r--', owner: 'root', group: 'root' },
               type: 'file',
               content: `This is an interactive Ubuntu terminal. It will serve as the home of all of my future projects and certifications.\n
 Use help to see what functionality is available.
-Try opening my resume with 'cat ~/Documents/Garrett Yokley.pdf or 'xdg-open ~/Documents/Garrett Yokley.pdf'
+Try opening my resume with 'cat ~/Documents/Resume/Garrett Yokley.pdf or 'xdg-open ~/Documents/Resume/Garrett Yokley.pdf'
 Try launching a certification PDF with 'xdg-open ~/Documents/Certs/Security+, CompTIA.pdf'
 Try bricking your system by running 'sudo rm -rf / --no-preserve-root' (Password:Password)`,
               permissions: '-rw-r--r--',
@@ -261,7 +261,13 @@ Try bricking your system by running 'sudo rm -rf / --no-preserve-root' (Password
                     'Portfolio': { type: 'file', content: '#!/usr/bin/env xdg-open\n# Portfolio Website\nURL=http://localhost:3000', permissions: '-rwxr-xr-x', owner: 'garrettyokley', group: 'garrettyokley' }
                   }
                 },
-                'Garrett Yokley.pdf': { type: 'file', content: `Garrett Yokley – Systems Administrator
+                'Resume': {
+                  type: 'dir',
+                  permissions: 'drwxr-xr-x',
+                  owner: 'garrettyokley',
+                  group: 'garrettyokley',
+                  children: {
+                    'Garrett Yokley.pdf': { type: 'file', content: `Garrett Yokley – Systems Administrator
 (678) 523-6062 • garrettyokley@protonmail.com • http://www.linkedin.com/in/garrettyokley
 Systems Administrator skilled in securing hybrid infrastructure and automating critical processes, passionate about exploring AI-driven solutions and machine learning.
 EDUCATION
@@ -287,6 +293,8 @@ SKILLS
 •	Network Infrastructure & Security: Entra ID • ZFS • Ubuntu • Debian • Microsoft SSMS • MySQL • DFS • Network Troubleshooting • VPN • Load balancers • VLAN Configuration • OpenSSH • NFS • FTP/SFTP • Rapid7 Vulnerability Management
 •	Development and Automation: Bash • Git • GitHub • GitLab • REST APIs • Python • Java • Node.js • Next.js • Angular • Bootstrap • Azure ML • Azure AI • Hibernate • Spring Data JPA • Vim • Excel Macros & Visual Basic
 `, permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' }
+                  }
+                }
               },
             },
             'Downloads': { type: 'dir', permissions: 'drwxr-xr-x', owner: 'garrettyokley', group: 'garrettyokley', children: {} },
@@ -1378,20 +1386,11 @@ const Hero: React.FC = () => {
         output.push(<TerminalText textType="info" key="help-tips">Tips:</TerminalText>);
         output.push('                - Use Tab for autocompletion');
         output.push('                - Use Up/Down arrows for command history');
-        output.push('                - Try: cd ~/Documents && xdg-open "Garrett Yokley.pdf"');
+        output.push('                - Try: xdg-open "Garrett Yokley.pdf"');
+        output.push('                - Try: cat "Garrett Yokley.pdf"');
         output.push('                - Try: touch /etc/test (will show permission error)');
         output.push('                - Try: sudo rm -rf / (Password: Password)');
         output.push('');
-        output.push(<TerminalText textType="info" key="help-quick">Quick Commands:</TerminalText>);
-        output.push('security-plus    - Open Security+ certification page');
-        output.push('itil4           - Open ITIL4 certification page');
-        output.push('linux-plus      - Open Linux+ certification page');
-        output.push('linux-essentials - Open Linux Essentials certification page');
-        output.push('ccna            - Open CCNA certification page');
-        output.push('rhcsa           - Open RHCSA certification page');
-        output.push('bachelor        - Open Bachelor\'s degree page');
-        output.push('certifications  - List all certifications');
-        output.push('education       - View education information');
         break;
       case 'ls':
         const showHidden = args.includes('-a') || args.includes('-A');
@@ -1740,7 +1739,7 @@ const Hero: React.FC = () => {
       // Direct certification commands
       case 'security-plus':
         output.push(<span style={{ color: '#00ffff' }}>Opening Security+ CompTIA certification PDF...</span>);
-        window.open('/Security+, CompTIA.pdf', '_blank');
+        window.open('/Security%2B%2C%20CompTIA.pdf', '_blank');
         break;
 
       case 'itil4':
