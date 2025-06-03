@@ -43,17 +43,18 @@ const Navbar: React.FC = () => {
             </button>
             {certsOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-black border border-[#00ffff] rounded-md py-1 z-50">
-                <Link href="/Security+, CompTIA.pdf" target="_blank" className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">Security+</Link>
-                <Link href="/Linux+, CompTIA.pdf" target="_blank" className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">Linux+</Link>
-                <Link href="/Linux Essentials (LPI-1), Linux Professional Institute.pdf" target="_blank" className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">Linux Essentials</Link>
-                <Link href="/ITIL4, Information Technology Infrastructure Library.pdf" target="_blank" className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">ITIL4</Link>
-                <Link href="/CCNA, Cisco.pdf" target="_blank" className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">CCNA</Link>
+                <Link href="/Security+, CompTIA.pdf" target="_blank" onClick={() => setCertsOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">Security+</Link>
+                <Link href="/linux-plus-comptia" onClick={() => setCertsOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">Linux+</Link>
+                <Link href="/linux-essentials-lpi" onClick={() => setCertsOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">Linux Essentials</Link>
+                <Link href="/ITIL4, Information Technology Infrastructure Library.pdf" target="_blank" onClick={() => setCertsOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">ITIL4</Link>
+                <Link href="/ccna-cisco" onClick={() => setCertsOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">CCNA</Link>
+                <Link href="/rhcsa-red-hat" onClick={() => setCertsOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">RHCSA</Link>
               </div>
             )}
           </div>
 
           {/* Projects Dropdown */}
-          <div className="relative">
+          {/* <div className="relative">
             <button onClick={() => { setProjectsOpen(!projectsOpen); setCertsOpen(false); setLinksOpen(false); }} className="hover:text-cyan-300 transition-colors">
               Projects
             </button>
@@ -62,7 +63,12 @@ const Navbar: React.FC = () => {
                 <a href="https://github.com/garrettyokley" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">Chess</a>
               </div>
             )}
-          </div>
+          </div> */}
+
+          {/* Education Button */}
+          <Link href="/bachelor-computer-science-wgu" className="hover:text-cyan-300 transition-colors">
+            Education
+          </Link>
 
           {/* Links Dropdown */}
           <div className="relative">
@@ -71,10 +77,10 @@ const Navbar: React.FC = () => {
             </button>
             {linksOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-black border border-[#00ffff] rounded-md py-1 z-50">
-                <a href="https://github.com/garrettyokley" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">GitHub</a>
-                <a href="https://www.linkedin.com/in/garrettyokley" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">LinkedIn</a>
-                <a href="https://wgu.joinhandshake.com/profiles/mcdppf" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">Handshake</a>
-                <a href="https://tinyurl.com/emailgarrettyokley" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">Email</a>
+                <a href="https://github.com/garrettyokley" target="_blank" rel="noopener noreferrer" onClick={() => setLinksOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">GitHub</a>
+                <a href="https://www.linkedin.com/in/garrettyokley" target="_blank" rel="noopener noreferrer" onClick={() => setLinksOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">LinkedIn</a>
+                <a href="https://wgu.joinhandshake.com/profiles/mcdppf" target="_blank" rel="noopener noreferrer" onClick={() => setLinksOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">Handshake</a>
+                <a href="https://tinyurl.com/emailgarrettyokley" target="_blank" rel="noopener noreferrer" onClick={() => setLinksOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">Email</a>
               </div>
             )}
           </div>

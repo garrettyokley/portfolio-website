@@ -1079,7 +1079,8 @@ const Hero: React.FC = () => {
       // Command completion
       const commands = [
         'help', 'ls', 'cd', 'cat', 'echo', 'clear', 'whoami', 'date', 'pwd', 'open', 'xdg-open',
-        'certifications', 'certs', 'projects', 'links', 'portfolio',
+        'certifications', 'certs', 'projects', 'links', 'portfolio', 'education',
+        'security-plus', 'itil4', 'linux-plus', 'linux-essentials', 'ccna', 'rhcsa', 'bachelor',
         'l', 'll', 'la'  // aliases
       ];
       return commands.filter(cmd => cmd.toLowerCase().startsWith(lastPart.toLowerCase()));
@@ -1375,11 +1376,22 @@ const Hero: React.FC = () => {
         output.push('vim             - Vi/Vim editor');
         output.push('\n');
         output.push(<TerminalText textType="info" key="help-tips">Tips:</TerminalText>);
-        output.push('                - Use Tab for autocomple');
+        output.push('                - Use Tab for autocompletion');
         output.push('                - Use Up/Down arrows for command history');
         output.push('                - Try: cd ~/Documents && xdg-open "Garrett Yokley.pdf"');
-        output.push('                - Try: touch /etc/test (will show permission error');
+        output.push('                - Try: touch /etc/test (will show permission error)');
         output.push('                - Try: sudo rm -rf / (Password: Password)');
+        output.push('');
+        output.push(<TerminalText textType="info" key="help-quick">Quick Commands:</TerminalText>);
+        output.push('security-plus    - Open Security+ certification page');
+        output.push('itil4           - Open ITIL4 certification page');
+        output.push('linux-plus      - Open Linux+ certification page');
+        output.push('linux-essentials - Open Linux Essentials certification page');
+        output.push('ccna            - Open CCNA certification page');
+        output.push('rhcsa           - Open RHCSA certification page');
+        output.push('bachelor        - Open Bachelor\'s degree page');
+        output.push('certifications  - List all certifications');
+        output.push('education       - View education information');
         break;
       case 'ls':
         const showHidden = args.includes('-a') || args.includes('-A');
@@ -1603,7 +1615,7 @@ const Hero: React.FC = () => {
               if (urlLine) {
                 const url = urlLine.split('=')[1];
                 output.push(<span style={{ color: '#00ffff' }}>{`Opening ${fileName}...`}</span>);
-                
+
                 if (fileName === 'Play Chess' || fileName === 'Chess Game') {
                   output.push(<span style={{ color: 'white' }}>{'Opening Chess Game...'}</span>);
                   output.push(<span style={{ color: 'white' }}>{'Opening project page: http://localhost:3000/chess.html'}</span>);
@@ -1626,16 +1638,29 @@ const Hero: React.FC = () => {
                 output.push(`${cmd}: cannot execute ${fileName}: invalid format`);
               }
             } else if (fileName.endsWith('.pdf')) {
-              // Open PDF in new tab - ACTUALLY DO IT
-              output.push(<span style={{ color: '#00ffff' }}>{'Opening PDF in new tab...'}</span>);
-              output.push(<span style={{ color: 'white' }}>{'File: ' + fileName}</span>);
-              if (fileName === 'Garrett Yokley.pdf') {
-                output.push(<span style={{ color: 'white' }}>{'Opening resume PDF...'}</span>);
-              } else if (fileName.includes('CompTIA') || fileName.includes('Cisco') || fileName.includes('ITIL') || fileName.includes('Linux')) {
-                output.push(<span style={{ color: 'white' }}>{'Opening certification PDF...'}</span>);
+              const comingSoonPdfs = [
+                'Linux+, CompTIA.pdf',
+                'Linux Essentials (LPI-1), Linux Professional Institute.pdf',
+                'CCNA, Cisco.pdf',
+                'RHCSA, Red Hat.pdf',
+                'Bachelor of Science in Computer Science, WGU.pdf'
+              ];
+
+              if (comingSoonPdfs.includes(fileName)) {
+                // For coming soon PDFs, display their content from the filesystem
+                output.push(file.content || `Content for ${fileName} (coming soon)`);
+              } else {
+                // For other PDFs (Resume, completed certs), attempt to open them
+                output.push(<span style={{ color: '#00ffff' }}>{'Opening PDF in new tab...'}</span>);
+                output.push(<span style={{ color: 'white' }}>{'File: ' + fileName}</span>);
+                if (fileName === 'Garrett Yokley.pdf') { // This case might be redundant due to earlier fetch logic for .txt
+                  output.push(<span style={{ color: 'white' }}>{'Opening resume PDF...'}</span>);
+                } else {
+                  // Generic message for other PDFs
+                  output.push(<span style={{ color: 'white' }}>{'Opening document PDF...'}</span>);
+                }
+                window.open('/' + fileName, '_blank');
               }
-              // Actually open the PDF in new tab (same as button behavior)
-              window.open('/' + fileName, '_blank');
             } else {
               output.push(file.content || '(empty file)');
             }
@@ -1652,17 +1677,18 @@ const Hero: React.FC = () => {
         output.push('Professional Certifications:');
         output.push('');
         output.push('Completed:');
-        output.push('  - Security+, CompTIA.pdf');
-        output.push('  - ITIL4, Information Technology Infrastructure Library.pdf');
+        output.push('  - Security+, CompTIA (completed)');
+        output.push('  - ITIL4, Information Technology Infrastructure Library (completed)');
         output.push('');
         output.push('Coming in 2025:');
-        output.push('  - Linux+, CompTIA.pdf (June 7, 2025)');
-        output.push('  - Linux Essentials (LPI-1), Linux Professional Institute.pdf (June 28, 2025)');
-        output.push('  - CCNA, Cisco.pdf (July 12, 2025)');
-        output.push('  - RHCSA, Red Hat.pdf (2025)');
+        output.push('  - Linux+, CompTIA (June 7, 2025)');
+        output.push('  - Linux Essentials (LPI-1), Linux Professional Institute (June 28, 2025)');
+        output.push('  - CCNA, Cisco (July 12, 2025)');
+        output.push('  - RHCSA, Red Hat (2025)');
         output.push('');
         output.push('Navigate to: cd ~/Documents/Certs');
-        output.push('Open PDFs with: xdg-open "Security+, CompTIA.pdf"');
+        output.push('Open details: xdg-open "Linux+, CompTIA.pdf"');
+        output.push('Or visit web pages directly with browser buttons above');
         break;
       case 'projects':
         output.push('Featured Projects:');
@@ -1682,6 +1708,7 @@ const Hero: React.FC = () => {
         output.push('');
         output.push('Navigate to: cd ~/Documents/Education');
         output.push('View details: xdg-open "Bachelor of Science in Computer Science, WGU.pdf"');
+        output.push('Or click the Education button in the navigation bar above');
         break;
       case 'links':
         output.push('Opening Links...');
@@ -1702,11 +1729,48 @@ const Hero: React.FC = () => {
         output.push('  certifications - View my professional certifications');
         output.push('  projects      - Explore my projects and code');
         output.push('  links         - Find my social and professional links');
+        output.push('  education     - View my degree progress');
         output.push('');
         output.push('You can also use the navigation buttons at the top of the page.');
         output.push('');
         output.push('This interactive terminal is itself a featured project!');
         output.push('Explore the filesystem with: ls -la, cd projects, etc.');
+        break;
+
+      // Direct certification commands
+      case 'security-plus':
+        output.push(<span style={{ color: '#00ffff' }}>Opening Security+ CompTIA certification PDF...</span>);
+        window.open('/Security+, CompTIA.pdf', '_blank');
+        break;
+
+      case 'itil4':
+        output.push(<span style={{ color: '#00ffff' }}>Opening ITIL4 Foundation certification PDF...</span>);
+        window.open('/ITIL4, Information Technology Infrastructure Library.pdf', '_blank');
+        break;
+
+      case 'linux-plus':
+        output.push(<span style={{ color: '#00ffff' }}>Opening Linux+ CompTIA certification page...</span>);
+        window.open('/linux-plus-comptia', '_blank');
+        break;
+
+      case 'linux-essentials':
+        output.push(<span style={{ color: '#00ffff' }}>Opening Linux Essentials (LPI-1) certification page...</span>);
+        window.open('/linux-essentials-lpi', '_blank');
+        break;
+
+      case 'ccna':
+        output.push(<span style={{ color: '#00ffff' }}>Opening CCNA Cisco certification page...</span>);
+        window.open('/ccna-cisco', '_blank');
+        break;
+
+      case 'rhcsa':
+        output.push(<span style={{ color: '#00ffff' }}>Opening RHCSA Red Hat certification page...</span>);
+        window.open('/rhcsa-red-hat', '_blank');
+        break;
+
+      case 'bachelor':
+        output.push(<span style={{ color: '#00ffff' }}>Opening Bachelor of Science in Computer Science page...</span>);
+        window.open('/bachelor-computer-science-wgu', '_blank');
         break;
       
       // TEXT EDITORS
@@ -1820,16 +1884,16 @@ const Hero: React.FC = () => {
 
       // FILE OPERATIONS
       case 'touch':
-        const touchFile = args[0];
-        if (!touchFile) {
+        const fileToTouch = args[0]; // Renamed from touchFile to fileToTouch to avoid conflict
+        if (!fileToTouch) {
           output.push(<TerminalText textType="error" key="touch-missing">touch: missing file operand</TerminalText>);
           success = false;
           break;
         }
-        if (createFile(pathContext, touchFile)) {
-          output.push(<span style={{ color: '#00ff00' }}>Created file: {touchFile}</span>);
+        if (createFile(pathContext, fileToTouch)) {
+          output.push(<span style={{ color: '#00ff00' }}>Created file: {fileToTouch}</span>);
         } else {
-          output.push(<TerminalText textType="error" key="touch-error">touch: cannot touch '{touchFile}': Permission denied</TerminalText>);
+          output.push(<TerminalText textType="error" key="touch-error">touch: cannot touch '{fileToTouch}': Permission denied</TerminalText>);
           success = false;
         }
         break;
