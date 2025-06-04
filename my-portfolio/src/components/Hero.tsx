@@ -153,10 +153,10 @@ const initialFileSystem: Directory = {
         'passwd': { type: 'file', content: 'root:x:0:0:root:/root:/bin/bash\ngarrettyokley:x:1000:1000:Garrett Yokley,,,:/home/garrettyokley:/bin/bash', permissions: '-rw-r--r--', owner: 'root', group: 'root' },
         'group': { type: 'file', content: 'root:x:0:\nadm:x:4:garrettyokley\nsudo:x:27:garrettyokley', permissions: '-rw-r--r--', owner: 'root', group: 'root' },
         'shadow': { type: 'file', content: 'root:*:19621:0:99999:7:::\ngarrettyokley:$6$rounds=4096$...:19621:0:99999:7:::', permissions: '-rw-------', owner: 'root', group: 'shadow' },
-        'motd': { type: 'file', content: `I started working in IT nearly two years ago. The plan was to pivot into software development once I had built a strong foundation.
-I\'ve had some exposure to development, including brief work training Azure AI models, but the bulk of my experience has focused on systems administration, automation, and security, learning whatever was required to keep things running.
-At a smaller company, I\'ve had the freedom to take initiative. Frustrated by repetitive tasks, I began building automation for deployments, workstation and server builds, vulnerability scanning, and patching. That turned into a growing interest in DevOps and systems engineering. But I\'m not fixed on one path. I try to stay curious, stay on top of emerging technologies, and build things that solve real problems.
-I\'ve now built that strong foundation, and I\'m now setting out to prove it through certifications and personal projects.\n
+        'motd': { type: 'file', content: `I began working in IT two years ago. The plan was to pivot into software development once I had built a strong foundation.
+I\'ve had some exposure to development, including brief work training Azure AI models, but the bulk of my experience has focused on systems administration, automation, and security, learning whatever was required to keep things running.\n
+At a smaller company, I\'ve had the flexibility to take initiative with projects outside the scope of my role. Recognizing the need to reduce repetitive and manual tasks, I began building automation for deployments, workstation and server builds, vulnerability scanning, and patching. That turned into a growing interest in DevOps and systems engineering.\n
+But I\'m not fixed on one path. I try to stay curious, stay on top of emerging technologies, and build things that solve real problems. Now that I\'ve built a strong foundation, I\'m now sharpening my skills through completing a computer science degree, acquiring certifications, as well as personal projects.\n
 Try cat README.md`, permissions: '-rw-r--r--', owner: 'root', group: 'root' },
         'hosts': { type: 'file', content: '127.0.0.1\tlocalhost\n127.0.1.1\tportfolio-site\n::1\t\tlocalhost ip6-localhost ip6-loopback', permissions: '-rw-r--r--', owner: 'root', group: 'root' },
         'hostname': { type: 'file', content: 'portfolio-site', permissions: '-rw-r--r--', owner: 'root', group: 'root' },
@@ -2936,7 +2936,7 @@ const Hero: React.FC = () => {
   return (
     <>
       <section 
-        className="min-h-screen bg-black flex flex-col justify-center items-center p-4 pt-20"
+        className="min-h-screen bg-black flex flex-col justify-start items-center p-4 pt-12"
         style={{ cursor: 'default' }}
       >
         {systemBricked ? (
