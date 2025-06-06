@@ -37,7 +37,7 @@ const Navbar: React.FC = () => {
       <div className="container mx-auto px-4 py-3">
         <div className="flex justify-center items-center space-x-12">
           {/* Resume Button */}
-          <Link href="/resume/Garrett Yokley.pdf" target="_blank" className="border border-[#00ffff] px-4 py-2 rounded hover:bg-[#00ffff] hover:text-black transition-colors">
+          <Link href="/Garrett Yokley.pdf" target="_blank" className="border border-[#00ffff] px-4 py-2 rounded hover:bg-[#00ffff] hover:text-black transition-colors">
             Resume
           </Link>
 
