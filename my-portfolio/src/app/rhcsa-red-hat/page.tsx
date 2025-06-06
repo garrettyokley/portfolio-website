@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function RHCSAPage() {
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-8">
+    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-start p-8 pt-12">
       <div className="max-w-4xl w-full bg-gray-900 border border-[#00ffff] rounded-lg p-8">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-[#00ffff] mb-4">RHCSA</h1>

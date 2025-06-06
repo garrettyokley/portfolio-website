@@ -24,7 +24,7 @@ const Navbar: React.FC = () => {
     };
   }, []);
 
-  return (
+    return (
     <nav className="bg-black text-[#00ffff] sticky top-0 z-50" ref={dropdownRef}>
       {/* Header with name centered */}
       <div className="text-center py-4">
