@@ -16,9 +16,6 @@ export default function ITIL4Page() {
         <div className="space-y-6">
           <div className="bg-black p-6 rounded-lg border border-gray-700">
             <h2 className="text-2xl font-semibold text-[#00ff00] mb-4">Status: ✅ Completed</h2>
-            <p className="text-gray-300 text-lg leading-relaxed">
-              Successfully obtained ITIL4 Foundation certification demonstrating knowledge of IT service management best practices.
-            </p>
           </div>
           
           <div className="text-center pt-6">

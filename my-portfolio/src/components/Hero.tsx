@@ -223,12 +223,12 @@ Try bricking your system by running 'sudo rm -rf / --no-preserve-root' (Password
                   owner: 'garrettyokley',
                   group: 'garrettyokley',
                   children: {
-                    'Security+, CompTIA.pdf': { type: 'file', content: 'CompTIA Security+ Certification\n\nCertification Details:\nIssued by: CompTIA\nCertification ID: [Completed]\nValid until: [Active]', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
-                    'Linux+, CompTIA.pdf': { type: 'file', content: 'CompTIA Linux+ Certification\n\nStatus: Coming June 7, 2025\n\nThis certification validates advanced Linux administration skills and knowledge.', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
-                    'Linux Essentials (LPI-1), Linux Professional Institute.pdf': { type: 'file', content: 'Linux Professional Institute - Linux Essentials\n\nStatus: Coming June 28, 2025\n\nFoundational certification covering Linux basics and essential skills.', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
-                    'ITIL4, Information Technology Infrastructure Library.pdf': { type: 'file', content: 'ITIL 4 Foundation Certification\n\nCertification Details:\nIssued by: AXELOS\nCertification ID: [Completed]\nValid until: [Active]', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
-                    'CCNA, Cisco.pdf': { type: 'file', content: 'Cisco Certified Network Associate (CCNA)\n\nStatus: Coming July 12, 2025\n\nCertification covering networking fundamentals, routing, switching, and network security.', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
-                    'RHCSA, Red Hat.pdf': { type: 'file', content: 'Red Hat Certified System Administrator (RHCSA)\n\nStatus: Coming 2025\n\nHands-on certification demonstrating practical Linux system administration skills on Red Hat Enterprise Linux.', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' }
+                    'Security+, CompTIA.pdf': { type: 'file', content: 'CompTIA Security+ Certification', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
+                    'Linux+, CompTIA.pdf': { type: 'file', content: 'CompTIA Linux+ Certification\n\nStatus: Completed, awaiting digital certificate', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
+                    'Linux Essentials (LPI-1), Linux Professional Institute.pdf': { type: 'file', content: 'Linux Professional Institute - Linux Essentials\n\nStatus: Completed, awaiting digital certificate', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
+                    'ITIL4, Information Technology Infrastructure Library.pdf': { type: 'file', content: 'ITIL 4 Foundation Certification', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
+                    'CCNA, Cisco.pdf': { type: 'file', content: 'Cisco Certified Network Associate (CCNA)\n\nStatus: Coming July 12, 2025', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
+                    'RHCSA, Red Hat.pdf': { type: 'file', content: 'Red Hat Certified System Administrator (RHCSA)\n\nStatus: Coming 2025', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' }
                   }
                 },
                 'Projects': {
@@ -1366,7 +1366,7 @@ const Hero: React.FC = () => {
         output.push('cd              - Change directory (supports absolute and relative paths)');
         output.push('cat             - Display file content');
         output.push('xdg-open        - Execute/open file (links, applications)');
-        output.push('open            - Open/view file (alias for xdg-open)');
+        output.push('open            - Alias for xdg-open');
         output.push('echo            - Display a line of text');
         output.push('clear           - Clear the terminal');
         output.push('whoami          - Display current user');
@@ -1382,6 +1382,11 @@ const Hero: React.FC = () => {
         output.push('\n');
         output.push(<TerminalText textType="info" key="help-editors">Text Editors:</TerminalText>);
         output.push('vim             - Vi/Vim editor');
+        output.push('\n');
+        output.push(<TerminalText textType="info" key="help-editors">Other:</TerminalText>);
+        output.push('certifications  - Display a list of my professional certifications');
+        output.push('certs           - Alias for certifications');
+        output.push('education       - Display information about my education');
         output.push('\n');
         output.push(<TerminalText textType="info" key="help-tips">Tips:</TerminalText>);
         output.push('                - Use Tab for autocompletion');
@@ -1676,28 +1681,18 @@ const Hero: React.FC = () => {
         output.push('Professional Certifications:');
         output.push('');
         output.push('Completed:');
-        output.push('  - Security+, CompTIA (completed)');
-        output.push('  - ITIL4, Information Technology Infrastructure Library (completed)');
+        output.push('  - Security+, CompTIA');
+        output.push('  - ITIL4, Information Technology Infrastructure Library');
         output.push('');
+        output.push('  - Linux+, CompTIA');
+        output.push('  - Linux Essentials (LPI-1), Linux Professional Institute');
         output.push('Coming in 2025:');
-        output.push('  - Linux+, CompTIA (June 7, 2025)');
-        output.push('  - Linux Essentials (LPI-1), Linux Professional Institute (June 28, 2025)');
         output.push('  - CCNA, Cisco (July 12, 2025)');
         output.push('  - RHCSA, Red Hat (2025)');
         output.push('');
         output.push('Navigate to: cd ~/Documents/Certs');
         output.push('Open details: xdg-open "Linux+, CompTIA.pdf"');
         output.push('Or visit web pages directly with browser buttons above');
-        break;
-      case 'projects':
-        output.push('Featured Projects:');
-        output.push('');
-        output.push('Available in ~/Documents/Projects:');
-        output.push('  Chess Game         - Interactive chess game (try: xdg-open "Chess Game")');
-        output.push('');
-        output.push('This interactive terminal is itself a featured project!');
-        output.push('Navigate to: cd ~/Documents/Projects');
-        output.push('Explore with: ls -la');
         break;
       case 'education':
         output.push('Education:');
@@ -1708,32 +1703,6 @@ const Hero: React.FC = () => {
         output.push('Navigate to: cd ~/Documents/Education');
         output.push('View details: xdg-open "Bachelor of Science in Computer Science, WGU.pdf"');
         output.push('Or click the Education button in the navigation bar above');
-        break;
-      case 'links':
-        output.push('Opening Links...');
-        output.push('');
-        output.push('Important Links:');
-        output.push('  LinkedIn: [Your LinkedIn Profile]');
-        output.push('  GitHub: [Your GitHub Profile]');
-        output.push('  Portfolio: localhost:3000');
-        output.push('  Email: [Your Email]');
-        output.push('  Blog: [Your Blog]');
-        output.push('');
-        output.push('Click the "Links" button in the navigation bar to view all links.');
-        break;
-      case 'portfolio':
-        output.push('Portfolio Navigation');
-        output.push('');
-        output.push('Available Sections:');
-        output.push('  certifications - View my professional certifications');
-        output.push('  projects      - Explore my projects and code');
-        output.push('  links         - Find my social and professional links');
-        output.push('  education     - View my degree progress');
-        output.push('');
-        output.push('You can also use the navigation buttons at the top of the page.');
-        output.push('');
-        output.push('This interactive terminal is itself a featured project!');
-        output.push('Explore the filesystem with: ls -la, cd projects, etc.');
         break;
 
       // Direct certification commands

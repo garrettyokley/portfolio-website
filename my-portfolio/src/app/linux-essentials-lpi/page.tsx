@@ -15,10 +15,7 @@ export default function LinuxEssentialsPage() {
         
         <div className="space-y-6">
           <div className="bg-black p-6 rounded-lg border border-gray-700">
-            <h2 className="text-2xl font-semibold text-[#00ff00] mb-4">Status: Coming June 28, 2025</h2>
-            <p className="text-gray-300 text-lg leading-relaxed">
-              Foundational certification covering Linux basics and essential skills.
-            </p>
+            <h2 className="text-2xl font-semibold text-[#00ff00] mb-4">Status: Completed, awaiting digital certificate</h2>
           </div>
           
           <div className="text-center pt-6">
