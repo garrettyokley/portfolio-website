@@ -156,7 +156,7 @@ const initialFileSystem: Directory = {
         'motd': { type: 'file', content: `I began working in IT two years ago with a plan of building a strong foundation and then pivoting into software development.
 I\'ve had some exposure to development, including brief work training Azure AI models, but the bulk of my experience has focused on systems administration, automation, and security, learning whatever was required to keep things running.\n
 At a smaller company, I\'ve had the flexibility to take initiative with projects outside the scope of my role. Recognizing the need to reduce repetitive and manual tasks, I began building automation for deployments, workstation and server builds, vulnerability scanning, and patching. That turned into a growing interest in DevOps and systems engineering.\n
-But I\'m not fixed on one path. I try to stay curious, stay on top of emerging technologies, and build things that solve real problems. Now that I\'ve built a strong foundation, I\'m now sharpening my skills through completing a computer science degree, acquiring certifications, as well as personal projects.\n
+But I\'m not fixed on one path. I try to stay curious, stay on top of emerging technologies, and build things that solve real problems. Now that I\'ve built a strong foundation, I\'m sharpening my skills through completing a computer science degree, acquiring certifications, as well as personal projects.\n
 Try cat README.md`, permissions: '-rw-r--r--', owner: 'root', group: 'root' },
         'hosts': { type: 'file', content: '127.0.0.1\tlocalhost\n127.0.1.1\tportfolio-site\n::1\t\tlocalhost ip6-localhost ip6-loopback', permissions: '-rw-r--r--', owner: 'root', group: 'root' },
         'hostname': { type: 'file', content: 'portfolio-site', permissions: '-rw-r--r--', owner: 'root', group: 'root' },
@@ -246,7 +246,7 @@ Try bricking your system by running 'sudo rm -rf / --no-preserve-root' (Password
                   owner: 'garrettyokley',
                   group: 'garrettyokley',
                   children: {
-                    'Bachelor of Science in Computer Science, WGU.pdf': { type: 'file', content: 'Bachelor of Science in Computer Science\nWestern Governors University\n\nStatus: Coming September 2025\n\nCompetency-based degree program covering software development, algorithms, data structures, database design, and computer science fundamentals.', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' }
+                    'Bachelor of Science in Computer Science, WGU.pdf': { type: 'file', content: 'Bachelor of Science in Computer Science\nWestern Governors University\n\nStatus: Graduating September 2025', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' }
                   }
                 },
                 'Links': {
@@ -1087,7 +1087,7 @@ const Hero: React.FC = () => {
       // Command completion
       const commands = [
         'help', 'ls', 'cd', 'cat', 'echo', 'clear', 'whoami', 'date', 'pwd', 'open', 'xdg-open',
-        'certifications', 'certs', 'projects', 'links', 'portfolio', 'education',
+        'certifications', 'certs', 'education',
         'security-plus', 'itil4', 'linux-plus', 'linux-essentials', 'ccna', 'rhcsa', 'bachelor',
         'l', 'll', 'la'  // aliases
       ];
