@@ -225,7 +225,7 @@ Try bricking your system by running 'sudo rm -rf / --no-preserve-root' (Password
                   children: {
                     'Security+, CompTIA.pdf': { type: 'file', content: 'CompTIA Security+ Certification', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
                     'Linux+, CompTIA.pdf': { type: 'file', content: 'CompTIA Linux+ Certification\n\nStatus: Completed, awaiting digital certificate', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
-                    'Linux Essentials (LPI-1), Linux Professional Institute.pdf': { type: 'file', content: 'Linux Professional Institute - Linux Essentials\n\nStatus: Completed, awaiting digital certificate', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
+                    'Linux Essentials (010-160), Linux Professional Institute.pdf': { type: 'file', content: 'Linux Professional Institute - Linux Essentials\n\nStatus: Completed, awaiting digital certificate', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
                     'ITIL4, Information Technology Infrastructure Library.pdf': { type: 'file', content: 'ITIL 4 Foundation Certification', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
                     'CCNA, Cisco.pdf': { type: 'file', content: 'Cisco Certified Network Associate (CCNA)\n\nStatus: Coming July 12, 2025', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
                     'RHCSA, Red Hat.pdf': { type: 'file', content: 'Red Hat Certified System Administrator (RHCSA)\n\nStatus: Coming 2025', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' }
@@ -275,7 +275,7 @@ Bachelor of Science in Computer Science - Western Governors University (Graduati
 CERTIFICATIONS
 •	Security+, CompTIA
 •	Linux+, CompTIA (Scheduled 06/2025)
-•	Linux Essentials (LPI-1), Linux Professional Institute (Scheduled 06/2025)
+•	Linux Essentials (010-160), Linux Professional Institute (Scheduled 06/2025)
 •	ITIL4, Information Technology Infrastructure Library
 •	CCNA, Cisco (Scheduled 07/2025)
 WORK EXPERIENCE
@@ -1644,7 +1644,7 @@ const Hero: React.FC = () => {
             } else if (fileName.endsWith('.pdf')) {
               const comingSoonPdfs = [
                 'Linux+, CompTIA.pdf',
-                'Linux Essentials (LPI-1), Linux Professional Institute.pdf',
+                'Linux Essentials (010-160), Linux Professional Institute.pdf',
                 'CCNA, Cisco.pdf',
                 'RHCSA, Red Hat.pdf',
                 'Bachelor of Science in Computer Science, WGU.pdf'
@@ -1685,7 +1685,7 @@ const Hero: React.FC = () => {
         output.push('  - ITIL4, Information Technology Infrastructure Library');
         output.push('');
         output.push('  - Linux+, CompTIA');
-        output.push('  - Linux Essentials (LPI-1), Linux Professional Institute');
+        output.push('  - Linux Essentials (010-160), Linux Professional Institute');
         output.push('Coming in 2025:');
         output.push('  - CCNA, Cisco (July 12, 2025)');
         output.push('  - RHCSA, Red Hat (2025)');
@@ -1722,7 +1722,7 @@ const Hero: React.FC = () => {
         break;
 
       case 'linux-essentials':
-        output.push(<span style={{ color: '#00ffff' }}>Opening Linux Essentials (LPI-1) certification page...</span>);
+        output.push(<span style={{ color: '#00ffff' }}>Opening Linux Essentials (010-160) certification page...</span>);
         window.open('/linux-essentials-lpi', '_blank');
         break;
 
