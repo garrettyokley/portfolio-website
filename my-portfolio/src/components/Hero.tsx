@@ -224,7 +224,7 @@ Try bricking your system by running 'sudo rm -rf / --no-preserve-root' (Password
                   group: 'garrettyokley',
                   children: {
                     'Security+, CompTIA.pdf': { type: 'file', content: 'CompTIA Security+ Certification', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
-                    'Linux+, CompTIA.pdf': { type: 'file', content: 'CompTIA Linux+ Certification\n\nStatus: Completed, awaiting digital certificate', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
+                    'Linux+, CompTIA.pdf': { type: 'file', content: 'CompTIA Linux+ Certification', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
                     'Linux Essentials (010-160), Linux Professional Institute.pdf': { type: 'file', content: 'Linux Professional Institute - Linux Essentials\n\nStatus: Completed, awaiting digital certificate', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
                     'ITIL4, Information Technology Infrastructure Library.pdf': { type: 'file', content: 'ITIL 4 Foundation Certification', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
                     'CCNA, Cisco.pdf': { type: 'file', content: 'Cisco Certified Network Associate (CCNA)\n\nStatus: Coming July 12, 2025', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
@@ -1643,7 +1643,6 @@ const Hero: React.FC = () => {
               }
             } else if (fileName.endsWith('.pdf')) {
               const comingSoonPdfs = [
-                'Linux+, CompTIA.pdf',
                 'Linux Essentials (010-160), Linux Professional Institute.pdf',
                 'CCNA, Cisco.pdf',
                 'RHCSA, Red Hat.pdf',
@@ -1682,9 +1681,10 @@ const Hero: React.FC = () => {
         output.push('');
         output.push('Completed:');
         output.push('  - Security+, CompTIA');
+        output.push('  - Linux+, CompTIA');
         output.push('  - ITIL4, Information Technology Infrastructure Library');
         output.push('');
-        output.push('  - Linux+, CompTIA');
+        output.push('In Progress:');
         output.push('  - Linux Essentials (010-160), Linux Professional Institute');
         output.push('Coming in 2025:');
         output.push('  - CCNA, Cisco (July 12, 2025)');
@@ -1717,8 +1717,8 @@ const Hero: React.FC = () => {
         break;
 
       case 'linux-plus':
-        output.push(<span style={{ color: '#00ffff' }}>Opening Linux+ CompTIA certification page...</span>);
-        window.open('/linux-plus-comptia', '_blank');
+        output.push(<span style={{ color: '#00ffff' }}>Opening Linux+ CompTIA certification PDF...</span>);
+        window.open('/Linux%2B%2C%20CompTIA.pdf', '_blank');
         break;
 
       case 'linux-essentials':
