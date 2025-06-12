@@ -225,7 +225,7 @@ Try bricking your system by running 'sudo rm -rf / --no-preserve-root' (Password
                   children: {
                     'Security+, CompTIA.pdf': { type: 'file', content: 'CompTIA Security+ Certification', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
                     'Linux+, CompTIA.pdf': { type: 'file', content: 'CompTIA Linux+ Certification', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
-                    'Linux Essentials (010-160), Linux Professional Institute.pdf': { type: 'file', content: 'Linux Professional Institute - Linux Essentials\n\nStatus: Completed, awaiting digital certificate', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
+                    'Linux Essentials (010-160), Linux Professional Institute.pdf': { type: 'file', content: 'Linux Professional Institute - Linux Essentials', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
                     'ITIL4, Information Technology Infrastructure Library.pdf': { type: 'file', content: 'ITIL 4 Foundation Certification', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
                     'CCNA, Cisco.pdf': { type: 'file', content: 'Cisco Certified Network Associate (CCNA)\n\nStatus: Coming July 12, 2025', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
                     'RHCSA, Red Hat.pdf': { type: 'file', content: 'Red Hat Certified System Administrator (RHCSA)\n\nStatus: Coming 2025', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' }
@@ -1643,7 +1643,6 @@ const Hero: React.FC = () => {
               }
             } else if (fileName.endsWith('.pdf')) {
               const comingSoonPdfs = [
-                'Linux Essentials (010-160), Linux Professional Institute.pdf',
                 'CCNA, Cisco.pdf',
                 'RHCSA, Red Hat.pdf',
                 'Bachelor of Science in Computer Science, WGU.pdf'
@@ -1682,16 +1681,16 @@ const Hero: React.FC = () => {
         output.push('Completed:');
         output.push('  - Security+, CompTIA');
         output.push('  - Linux+, CompTIA');
+        output.push('  - Linux Essentials (010-160), Linux Professional Institute');
         output.push('  - ITIL4, Information Technology Infrastructure Library');
         output.push('');
-        output.push('In Progress:');
-        output.push('  - Linux Essentials (010-160), Linux Professional Institute');
         output.push('Coming in 2025:');
         output.push('  - CCNA, Cisco (July 12, 2025)');
         output.push('  - RHCSA, Red Hat (2025)');
         output.push('');
         output.push('Navigate to: cd ~/Documents/Certs');
         output.push('Open details: xdg-open "Linux+, CompTIA.pdf"');
+        output.push('Open details: xdg-open "Linux Essentials (010-160), Linux Professional Institute.pdf"');
         output.push('Or visit web pages directly with browser buttons above');
         break;
       case 'education':
@@ -1722,8 +1721,8 @@ const Hero: React.FC = () => {
         break;
 
       case 'linux-essentials':
-        output.push(<span style={{ color: '#00ffff' }}>Opening Linux Essentials (010-160) certification page...</span>);
-        window.open('/linux-essentials-lpi', '_blank');
+        output.push(<span style={{ color: '#00ffff' }}>Opening Linux Essentials (010-160) certification PDF...</span>);
+        window.open('/Linux%20Essentials%20%28010-160%29%2C%20LPI.pdf', '_blank');
         break;
 
       case 'ccna':
