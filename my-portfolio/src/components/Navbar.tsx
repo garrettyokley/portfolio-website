@@ -79,7 +79,6 @@ const Navbar: React.FC = () => {
                 <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-48 bg-black border border-[#00ffff] rounded-md py-1 z-50">
                   <a href="https://github.com/garrettyokley" target="_blank" rel="noopener noreferrer" onClick={() => setLinksOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">GitHub</a>
                   <a href="https://www.linkedin.com/in/garrettyokley" target="_blank" rel="noopener noreferrer" onClick={() => setLinksOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">LinkedIn</a>
-                  <a href="https://wgu.joinhandshake.com/profiles/mcdppf" target="_blank" rel="noopener noreferrer" onClick={() => setLinksOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">Handshake</a>
                   <a href="https://tinyurl.com/emailgarrettyokley" target="_blank" rel="noopener noreferrer" onClick={() => setLinksOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">Email</a>
                 </div>
               )}
@@ -126,7 +125,6 @@ const Navbar: React.FC = () => {
               <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-48 bg-black border border-[#00ffff] rounded-md py-1 z-50">
                 <a href="https://github.com/garrettyokley" target="_blank" rel="noopener noreferrer" onClick={() => setLinksOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">GitHub</a>
                 <a href="https://www.linkedin.com/in/garrettyokley" target="_blank" rel="noopener noreferrer" onClick={() => setLinksOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">LinkedIn</a>
-                <a href="https://wgu.joinhandshake.com/profiles/mcdppf" target="_blank" rel="noopener noreferrer" onClick={() => setLinksOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">Handshake</a>
                 <a href="https://tinyurl.com/emailgarrettyokley" target="_blank" rel="noopener noreferrer" onClick={() => setLinksOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">Email</a>
               </div>
             )}
