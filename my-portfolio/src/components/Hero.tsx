@@ -153,8 +153,7 @@ const initialFileSystem: Directory = {
         'passwd': { type: 'file', content: 'root:x:0:0:root:/root:/bin/bash\ngarrettyokley:x:1000:1000:Garrett Yokley,,,:/home/garrettyokley:/bin/bash', permissions: '-rw-r--r--', owner: 'root', group: 'root' },
         'group': { type: 'file', content: 'root:x:0:\nadm:x:4:garrettyokley\nsudo:x:27:garrettyokley', permissions: '-rw-r--r--', owner: 'root', group: 'root' },
         'shadow': { type: 'file', content: 'root:*:19621:0:99999:7:::\ngarrettyokley:$6$rounds=4096$...:19621:0:99999:7:::', permissions: '-rw-------', owner: 'root', group: 'shadow' },
-        'motd': { type: 'file', content: `Hi, Welcome to my website
-Try cat README.md`, permissions: '-rw-r--r--', owner: 'root', group: 'root' },
+        'motd': { type: 'file', content: `Try cat README.md`, permissions: '-rw-r--r--', owner: 'root', group: 'root' },
         'hosts': { type: 'file', content: '127.0.0.1\tlocalhost\n127.0.1.1\tportfolio-site\n::1\t\tlocalhost ip6-localhost ip6-loopback', permissions: '-rw-r--r--', owner: 'root', group: 'root' },
         'hostname': { type: 'file', content: 'portfolio-site', permissions: '-rw-r--r--', owner: 'root', group: 'root' },
         'fstab': { type: 'file', content: '# /etc/fstab: static file system information.\nUUID=... / ext4 defaults 0 1', permissions: '-rw-r--r--', owner: 'root', group: 'root' },
