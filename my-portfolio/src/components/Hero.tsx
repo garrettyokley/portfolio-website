@@ -227,8 +227,6 @@ Try bricking your system by running 'sudo rm -rf / --no-preserve-root' (Password
                     'Linux+, CompTIA.pdf': { type: 'file', content: 'CompTIA Linux+ Certification', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
                     'Linux Essentials (010-160), Linux Professional Institute.pdf': { type: 'file', content: 'Linux Professional Institute - Linux Essentials', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
                     'ITIL4, Information Technology Infrastructure Library.pdf': { type: 'file', content: 'ITIL 4 Foundation Certification', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
-                    'CCNA, Cisco.pdf': { type: 'file', content: 'Cisco Certified Network Associate (CCNA)\n\nStatus: Coming July 12, 2025', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' },
-                    'RHCSA, Red Hat.pdf': { type: 'file', content: 'Red Hat Certified System Administrator (RHCSA)\n\nStatus: Coming 2025', permissions: '-rw-r--r--', owner: 'garrettyokley', group: 'garrettyokley' }
                   }
                 },
                 'Projects': {
@@ -277,7 +275,6 @@ CERTIFICATIONS
 •	Linux+, CompTIA (Scheduled 06/2025)
 •	Linux Essentials (010-160), Linux Professional Institute (Scheduled 06/2025)
 •	ITIL4, Information Technology Infrastructure Library
-•	CCNA, Cisco (Scheduled 07/2025)
 WORK EXPERIENCE
 Docufree Corporation - 09/2023 - Present
 •	Administer Windows Server, Linux, and FreeBSD systems, managing DNS, Active Directory, Microsoft 365, and Exchange Online for large-scale infrastructure.
@@ -1088,7 +1085,7 @@ const Hero: React.FC = () => {
       const commands = [
         'help', 'ls', 'cd', 'cat', 'echo', 'clear', 'whoami', 'date', 'pwd', 'open', 'xdg-open',
         'certifications', 'certs', 'education',
-        'security-plus', 'itil4', 'linux-plus', 'linux-essentials', 'ccna', 'rhcsa', 'bachelor',
+        'security-plus', 'itil4', 'linux-plus', 'linux-essentials', 'bachelor',
         'l', 'll', 'la'  // aliases
       ];
       return commands.filter(cmd => cmd.toLowerCase().startsWith(lastPart.toLowerCase()));
@@ -1643,8 +1640,6 @@ const Hero: React.FC = () => {
               }
             } else if (fileName.endsWith('.pdf')) {
               const comingSoonPdfs = [
-                'CCNA, Cisco.pdf',
-                'RHCSA, Red Hat.pdf',
                 'Bachelor of Science in Computer Science, WGU.pdf'
               ];
 
@@ -1685,8 +1680,6 @@ const Hero: React.FC = () => {
         output.push('  - ITIL4, Information Technology Infrastructure Library');
         output.push('');
         output.push('Coming in 2025:');
-        output.push('  - CCNA, Cisco (July 12, 2025)');
-        output.push('  - RHCSA, Red Hat (2025)');
         output.push('');
         output.push('Navigate to: cd ~/Documents/Certs');
         output.push('Open details: xdg-open "Linux+, CompTIA.pdf"');
@@ -1725,15 +1718,6 @@ const Hero: React.FC = () => {
         window.open('/Linux%20Essentials%20%28010-160%29%2C%20LPI.pdf', '_blank');
         break;
 
-      case 'ccna':
-        output.push(<span style={{ color: '#00ffff' }}>Opening CCNA Cisco certification page...</span>);
-        window.open('/ccna-cisco', '_blank');
-        break;
-
-      case 'rhcsa':
-        output.push(<span style={{ color: '#00ffff' }}>Opening RHCSA Red Hat certification page...</span>);
-        window.open('/rhcsa-red-hat', '_blank');
-        break;
 
       case 'bachelor':
         output.push(<span style={{ color: '#00ffff' }}>Opening Bachelor of Science in Computer Science page...</span>);

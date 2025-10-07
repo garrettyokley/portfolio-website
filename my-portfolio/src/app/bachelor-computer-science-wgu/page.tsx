@@ -15,7 +15,7 @@ export default function BachelorDegreePage() {
         
         <div className="space-y-6">
           <div className="bg-black p-6 rounded-lg border border-gray-700">
-            <h2 className="text-2xl font-semibold text-[#00ff00] mb-4">Status: Graduating September 2025</h2>
+            <h2 className="text-2xl font-semibold text-[#00ff00] mb-4">Status: Graduating Spring 2026</h2>
           </div>
           
           <div className="text-center pt-6">

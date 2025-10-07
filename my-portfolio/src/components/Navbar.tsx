@@ -58,8 +58,6 @@ const Navbar: React.FC = () => {
                   <Link href="/Linux%2B%2C%20CompTIA.pdf" target="_blank" onClick={() => setCertsOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">Linux+</Link>
                   <Link href="/Linux%20Essentials%20%28010-160%29%2C%20LPI.pdf" target="_blank" onClick={() => setCertsOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">Linux Essentials</Link>
                   <Link href="/ITIL4, Information Technology Infrastructure Library.pdf" target="_blank" onClick={() => setCertsOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">ITIL4</Link>
-                  <Link href="/ccna-cisco" onClick={() => setCertsOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">CCNA</Link>
-                  <Link href="/rhcsa-red-hat" onClick={() => setCertsOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">RHCSA</Link>
                 </div>
               )}
             </div>
@@ -110,8 +108,6 @@ const Navbar: React.FC = () => {
                 <Link href="/Linux%2B%2C%20CompTIA.pdf" target="_blank" onClick={() => setCertsOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">Linux+</Link>
                 <Link href="/Linux%20Essentials%20%28010-160%29%2C%20LPI.pdf" target="_blank" onClick={() => setCertsOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">Linux Essentials</Link>
                 <Link href="/ITIL4, Information Technology Infrastructure Library.pdf" target="_blank" onClick={() => setCertsOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">ITIL4</Link>
-                <Link href="/ccna-cisco" onClick={() => setCertsOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">CCNA</Link>
-                <Link href="/rhcsa-red-hat" onClick={() => setCertsOpen(false)} className="block px-4 py-2 text-sm text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-colors">RHCSA</Link>
               </div>
             )}
           </div>
