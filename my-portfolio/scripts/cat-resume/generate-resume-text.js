@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const pdf = require('pdf-parse');
+const { PDFParse } = require('pdf-parse');
 
 const cleanText = (text) => {
   return text
@@ -20,65 +20,55 @@ const cleanText = (text) => {
     .trim();
 };
 
-const generateResumeText = () => {
-  return new Promise((resolve, reject) => {
-    const pdfPath = path.join(__dirname, '..', '..', 'public', 'Garrett Yokley.pdf');
-    const outputPath = path.join(__dirname, '..', '..', 'public', 'Garrett Yokley.txt');
-    
-    console.log('Extracting text from PDF using Node.js...');
-    console.log(`PDF: ${pdfPath}`);
-    console.log(`Output: ${outputPath}`);
-    
-    // Check if PDF exists
-    if (!fs.existsSync(pdfPath)) {
-      reject(new Error(`PDF file not found: ${pdfPath}`));
-      return;
+const generateResumeText = async () => {
+  const pdfPath = path.join(__dirname, '..', '..', 'public', 'Garrett Yokley.pdf');
+  const outputPath = path.join(__dirname, '..', '..', 'public', 'Garrett Yokley.txt');
+  
+  console.log('Extracting text from PDF using Node.js...');
+  console.log(`PDF: ${pdfPath}`);
+  console.log(`Output: ${outputPath}`);
+  
+  // Check if PDF exists
+  if (!fs.existsSync(pdfPath)) {
+    throw new Error(`PDF file not found: ${pdfPath}`);
+  }
+  
+  // Clean up any existing text file first to avoid conflicts
+  try {
+    if (fs.existsSync(outputPath)) {
+      fs.unlinkSync(outputPath);
+      console.log('Removed existing text file');
     }
+  } catch (error) {
+    console.warn('Could not remove existing text file:', error.message);
+  }
+  
+  // Read PDF file as buffer
+  const dataBuffer = await fs.promises.readFile(pdfPath);
+  
+  // Parse PDF using pdf-parse v2 API
+  const pdfParser = new PDFParse({ data: dataBuffer });
+  
+  try {
+    const textResult = await pdfParser.getText();
     
-    // Clean up any existing text file first to avoid conflicts
-    try {
-      if (fs.existsSync(outputPath)) {
-        fs.unlinkSync(outputPath);
-        console.log('Removed existing text file');
-      }
-    } catch (error) {
-      console.warn('Could not remove existing text file:', error.message);
-    }
+    console.log('Cleaning extracted text...');
     
-    // Read PDF file as buffer
-    fs.readFile(pdfPath, (err, dataBuffer) => {
-      if (err) {
-        reject(new Error(`Failed to read PDF file: ${err.message}`));
-        return;
-      }
-      
-      // Parse PDF using pdf-parse
-      pdf(dataBuffer)
-        .then((data) => {
-          try {
-            console.log('Cleaning extracted text...');
-            
-            // Clean the extracted text
-            const cleanedText = cleanText(data.text);
-            
-            // Write the cleaned text to file
-            fs.writeFileSync(outputPath, cleanedText, 'utf8');
-            
-            const stats = fs.statSync(outputPath);
-            console.log('Resume text extracted and cleaned successfully');
-            console.log(`Final file size: ${stats.size} bytes`);
-            console.log(`Extracted ${data.numpages} pages`);
-            console.log('Removed unknown characters and empty lines');
-            resolve();
-          } catch (cleanError) {
-            reject(new Error(`Failed to clean and save text: ${cleanError.message}`));
-          }
-        })
-        .catch((parseError) => {
-          reject(new Error(`Failed to parse PDF: ${parseError.message}`));
-        });
-    });
-  });
+    // Clean the extracted text
+    const cleanedText = cleanText(textResult.text);
+    
+    // Write the cleaned text to file
+    fs.writeFileSync(outputPath, cleanedText, 'utf8');
+    
+    const stats = fs.statSync(outputPath);
+    console.log('Resume text extracted and cleaned successfully');
+    console.log(`Final file size: ${stats.size} bytes`);
+    console.log(`Extracted ${textResult.total} pages`);
+    console.log('Removed unknown characters and empty lines');
+  } finally {
+    // Clean up the parser instance
+    await pdfParser.destroy();
+  }
 };
 
 // Run if called directly

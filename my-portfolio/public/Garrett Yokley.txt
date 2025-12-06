@@ -1,14 +1,14 @@
 Garrett Yokley
-Systems Administrator
+System Administrator
 (678) 523-6062 | garrettyokley@protonmail.com | linkedin.com/in/garrettyokley | garrettyokley.com
-Systems Administrator experienced in securing and maintaining hybrid infrastructure, interested in
+System Administrator experienced in securing and maintaining hybrid infrastructure, interested in
 pursuing DevOps, and fascinated with machine learning.
 CERTIFICATIONS
 Security+, CompTIA
 Linux+, CompTIA
 Linux Essentials (LPI-1), Linux Professional Institute
 ITIL4, Information Technology Infrastructure Library
-CCNA, Cisco (Scheduled 07/2025)
+CCNA, Cisco (Scheduled November 2025)
 WORK EXPERIENCE
 Docufree Corporation - 09/2023 - Present
 Administer Windows Server, Linux, and FreeBSD systems, managing DNS, Active Directory,
@@ -34,6 +34,7 @@ SKILLS
 Proficient in: Rapid7 vulnerability management Ubuntu Vim DFS OpenSSH DNS
 Windows file sharing SMB Entra ID Bash Git GitHub GitLab
 Familiar with: Rubrik security and backup Cisco IOS and device config FortiGate Firewall
-Config RedHat FTP/SFTP REST APIs Python Java Node.js Node.js Angular NFS ZFS
-Bootstrap Hibernate Spring Data JPA Excel Macros & Visual Basic MySQL Microsoft
-SSMS Load balancers
+Config FTP/SFTP REST APIs Python Java Node.js Node.js Angular NFS ZFS
+Bootstrap Hibernate Spring Data JPA Excel Macros & Visual Basic MySQL Microsoft SSMS
+Load balancers
+-- 1 of 1 --
